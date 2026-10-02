@@ -328,7 +328,7 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
   <div class="sideLink" data-view="pair"><span class="ic">📱</span> Tautkan Perangkat</div>
   <div class="sideLink" data-view="owner"><span class="ic">👑</span> Owner Bot</div>
   <div class="sideH">Kelola</div>
-  <div class="sideLink" data-view="inbox"><span class="ic">💬</span> Pesan <span class="badge">12</span></div>
+  <div class="sideLink" data-view="inbox"><span class="ic">💬</span> Pesan <span class="badge" id="inboxBadge" style="display:none">0</span></div>
   <div class="sideLink" data-view="groups"><span class="ic">👥</span> Grup</div>
   <div class="sideLink" data-view="features"><span class="ic">⚡</span> Fitur</div>
   <div class="sideLink" data-view="commands"><span class="ic">📝</span> Daftar Command</div>
@@ -373,13 +373,9 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
   <div style="display:grid;grid-template-columns:1fr;gap:18px;">
     <div class="panel">
       <h2>Aktivitas Terbaru</h2>
-      <p class="desc">Aksi bot 5 menit terakhir.</p>
+      <p class="desc">Aksi bot 5 menit terakhir. Akan muncul otomatis setelah bot online.</p>
       <div id="recentAct">
-        <div class="act"><div class="ico">✅</div><div class="tx"><b>Berhasil menjawab .menu</b><span>di grup Kelas 12 IPA 1</span><div class="tm">baru saja</div></div></div>
-        <div class="act"><div class="ico">⛔</div><div class="tx"><b>Pesan dihapus (link)</b><span>+62 812-xxxx kirim link di grup Free</span><div class="tm">2 menit lalu</div></div></div>
-        <div class="act"><div class="ico">🎵</div><div class="tx"><b>Song request .play terkirim</b><span>ke +62 857-xxxx</span><div class="tm">4 menit lalu</div></div></div>
-        <div class="act"><div class="ico">👋</div><div class="tx"><b>Welcome anggota baru</b><span>3 anggota bergabung di Grup Wibu Indo</span><div class="tm">8 menit lalu</div></div></div>
-        <div class="act"><div class="ico">🤖</div><div class="tx"><b>Auto-respon AI aktif</b><span>29 respon hari ini</span><div class="tm">12 menit lalu</div></div></div>
+        <div class="act" style="opacity:.5"><div class="ico">💤</div><div class="tx"><b>Belum ada aktivitas</b><span>Tautkan perangkat dulu untuk mulai bot.</span><div class="tm">—</div></div></div>
       </div>
     </div>
     <div class="panel">
@@ -520,12 +516,8 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
     <div class="tabs"><button class="tab active">Semua</button><button class="tab">Belum Dibaca</button><button class="tab">Grup</button><button class="tab">Personal</button></div>
     <table class="tbl">
       <thead><tr><th>Nama</th><th>Tipe</th><th>Pesan Terakhir</th><th>Waktu</th><th></th></tr></thead>
-      <tbody>
-        <tr><td>📢 Grup Wibu Indo</td><td><span class="tag on">Grup</span></td><td>.menu dong min</td><td>1m</td><td><button class="btn sm">Balas</button></td></tr>
-        <tr><td>+62 812-34xx</td><td><span class="tag prem">Personal</span></td><td>min kok botnya ga respon?</td><td>3m</td><td><button class="btn sm">Balas</button></td></tr>
-        <tr><td>🎓 Kelas 12 IPA 1</td><td><span class="tag on">Grup</span></td><td>.stiker</td><td>5m</td><td><button class="btn sm">Balas</button></td></tr>
-        <tr><td>🛒 Toko Online</td><td><span class="tag adm">Admin</span></td><td>.broadcast udah?</td><td>12m</td><td><button class="btn sm">Balas</button></td></tr>
-        <tr><td>+62 857-xxxx</td><td><span class="tag on">Personal</span></td><td>makasih min botnya keren!</td><td>27m</td><td><button class="btn sm">Balas</button></td></tr>
+      <tbody id="inboxBody">
+        <tr><td colspan="5" style="text-align:center;color:var(--text2);padding:30px">💤 Belum ada pesan. Bot akan menerima pesan setelah online.</td></tr>
       </tbody>
     </table>
   </div>
@@ -920,6 +912,7 @@ function closeSidebar(){burger.classList.remove('open');sidebar.classList.remove
 function openSidebar(){burger.classList.add('open');sidebar.classList.add('open');if(window.innerWidth<1024){backdrop.classList.add('show');document.querySelector('main').classList.remove('sb-open');}else{backdrop.classList.remove('show');document.querySelector('main').classList.add('sb-open');}}
 burger.onclick=()=>{if(sidebar.classList.contains('open')){closeSidebar();}else{openSidebar();}};
 backdrop.onclick=closeSidebar;
+document.querySelectorAll('.sideLink').forEach(l=>{l.onclick=()=>go(l.dataset.view);l.style.cursor='pointer';});
 function go(v){
   if(!currentUser){restoreSession();return;}
   document.querySelectorAll('.view').forEach(x=>x.classList.add('hidden'));
@@ -1213,20 +1206,27 @@ let i;
 function simStartPair(num){
   clearInterval(pairTimer);
   pairCode.textContent='––––––––';
+  // hapus tombol simNext sisa kalau ada
+  document.querySelectorAll('.simNext').forEach(b=>b.remove());
   setTimeout(()=>{
     const code=randCode();pairingCodeVal=code;pairCode.textContent=code;
     drawQR('https://wa.me/pair/'+code.replace(/-/g,''));
-    waitConnect.style.display='inline-flex';waitMsg.textContent='(DEMO) Ini cuma kode contoh. Klik tombol "Saya sudah masukkan kode" kalo mau lanjut.';
-    addLog('ok','(DEMO) Kode contoh: '+code);addW3('(DEMO) Ini simulasi karena bukan di server VPS','wr');
-    // tombol tambahan untuk lanjut manual
-    const row=waitConnect.parentElement.querySelector('.row');
-    if(row&&!row.querySelector('.simNext')){
-      const b=document.createElement('button');b.className='btn green sm simNext';b.textContent='✅ Saya sudah masukkan kode';
-      b.onclick=()=>{clearInterval(pairTimer);const d={botNumber:pairNumberVal,user:{name:'Bot '+pairNumberVal.slice(-4)}};onConnected(d);};
-      row.appendChild(b);
-    }
-    let sec=0;pairTimer=setInterval(()=>{sec++;if(sec>=90){clearInterval(pairTimer);addLog('wr','(DEMO) Kode expired, klik Refresh');addW3('Kode expired','wr');}},1000);
-  },1000);
+    waitConnect.style.display='inline-flex';waitMsg.textContent='(DEMO) Kode contoh — otomatis lanjut 7 detik lagi...';
+    addLog('ok','(DEMO) Kode contoh tampil: '+code);
+    addW3('(DEMO) Ini simulasi (bukan di server VPS). Otomatis lanjut ke langkah owner...','wr');
+    // AUTO lanjut setelah 7 detik (seolah user sudah masukin kode)
+    let sec=0;
+    pairTimer=setInterval(()=>{
+      sec++;
+      waitMsg.textContent='(DEMO) Simulasi koneksi... '+Math.max(0,7-sec)+'d';
+      if(sec>=7){
+        clearInterval(pairTimer);
+        addLog('ok','(DEMO) ✅ Simulasi pairing BERHASIL');
+        addW3('(DEMO) Kode diterima — simulasi sukses','ok');
+        onConnected({botNumber:pairNumberVal,user:{name:'Bot '+pairNumberVal.slice(-4)}});
+      }
+    },1000);
+  },1200);
 }
 
 /* ========= TOMBOL LAIN ========= */
@@ -1369,12 +1369,8 @@ async function boot(){
     addL('wr','[boot] Mode preview — jalankan bot di server untuk pairing nyata');
   }
 
-  setInterval(()=>{
-    const msgs=[['ok','pesan diterima'],['ok','.menu diproses'],['wr','spam terdeteksi'],['ok','stiker dibuat']];
-    const m=msgs[Math.floor(Math.random()*msgs.length)];addL(m[0],m[1]);
-    if(BACKEND)refreshStatus().catch(()=>{});
-  },9000);
-  setInterval(()=>{if(BACKEND)refreshStatus().catch(()=>{});},15000);
+  // Polling status rutin (tanpa fake logs)
+  setInterval(()=>{if(BACKEND)refreshStatus().catch(()=>{});},5000);
 }
 
 /* Toggle klik */
