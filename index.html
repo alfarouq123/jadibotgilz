@@ -916,17 +916,20 @@ let pairTimer = null;
 
 /* ========= NAV ========= */
 const burger=document.getElementById('burger'),sidebar=document.getElementById('sidebar'),backdrop=document.getElementById('backdrop');
-burger.onclick=()=>{burger.classList.toggle('open');sidebar.classList.toggle('open');backdrop.classList.toggle('show');};
-backdrop.onclick=()=>{burger.classList.remove('open');sidebar.classList.remove('open');backdrop.classList.remove('open');};
-document.querySelectorAll('.sideLink').forEach(l=>l.onclick=()=>go(l.dataset.view));
+function closeSidebar(){burger.classList.remove('open');sidebar.classList.remove('open');backdrop.classList.remove('show');document.querySelector('main').classList.remove('sb-open');}
+function openSidebar(){burger.classList.add('open');sidebar.classList.add('open');if(window.innerWidth<1024){backdrop.classList.add('show');document.querySelector('main').classList.remove('sb-open');}else{backdrop.classList.remove('show');document.querySelector('main').classList.add('sb-open');}}
+burger.onclick=()=>{if(sidebar.classList.contains('open')){closeSidebar();}else{openSidebar();}};
+backdrop.onclick=closeSidebar;
 function go(v){
-  if(!currentUser){requireLogin();return;}
+  if(!currentUser){restoreSession();return;}
   document.querySelectorAll('.view').forEach(x=>x.classList.add('hidden'));
   const el=document.getElementById('view-'+v);
   if(el)el.classList.remove('hidden');
   document.querySelectorAll('.sideLink').forEach(x=>x.classList.toggle('active',x.dataset.view===v));
-  if(window.innerWidth<1024){burger.classList.remove('open');sidebar.classList.remove('open');backdrop.classList.remove('open');}
-  document.querySelector('main').classList.toggle('sb-open',sidebar.classList.contains('open')&&window.innerWidth>=1024);
+  // tutup sidebar + backdrop setelah pilih menu (khususnya di mobile, tap aman juga di desktop)
+  closeSidebar();
+  // di desktop sidebar tetap terlihat (sb-open)
+  if(window.innerWidth>=1024){sidebar.classList.add('open');document.querySelector('main').classList.add('sb-open');}
   window.scrollTo({top:0,behavior:'smooth'});
 }
 // ENTER key di form login
@@ -938,7 +941,12 @@ document.addEventListener('DOMContentLoaded',()=>{
   // pastikan tidak ada overlay yg nyangkut (backdrop)
   const bd=document.getElementById('backdrop');if(bd)bd.classList.remove('show');
 });
-window.addEventListener('resize',()=>document.querySelector('main').classList.toggle('sb-open',sidebar.classList.contains('open')&&window.innerWidth>=1024));
+window.addEventListener('resize',()=>{
+  const isDesktop=window.innerWidth>=1024;
+  document.querySelector('main').classList.toggle('sb-open',sidebar.classList.contains('open')&&isDesktop);
+  // kalo pindah ke desktop sembunyiin backdrop; kalo ke mobile dengan sidebar tertutup juga sembunyiin
+  if(isDesktop||!sidebar.classList.contains('open'))backdrop.classList.remove('show');
+});
 
 /* ========= TOAST ========= */
 function toast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(type==='err'?'err':type==='wr'?'wr':'');setTimeout(()=>t.className='toast',2800);}
