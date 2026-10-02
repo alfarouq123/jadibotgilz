@@ -790,9 +790,9 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
 const GOOGLE_CLIENT_ID='156494960890-uss9j8vrahu9gv6jd4dle8aj711fh016.apps.googleusercontent.com';
 let currentUser=null;
 function showLoginErr(msg){const e=document.getElementById('loginErr');if(!e)return;e.textContent=msg;e.style.display='block';clearTimeout(window._leT);window._leT=setTimeout(()=>e.style.display='none',4000);}
-function applyUser(u){
+function renderUser(u){
+  if(!u)return;
   currentUser=u;
-  try{localStorage.setItem('gilz_user',JSON.stringify(u));}catch{}
   document.getElementById('loginWall').classList.add('hidden');
   document.getElementById('userChip').style.display='inline-flex';
   document.getElementById('logoutBtn').style.display='inline-block';
@@ -800,6 +800,18 @@ function applyUser(u){
   const rb=document.getElementById('userRole');
   rb.textContent=(u.role||'FREE').toUpperCase();
   rb.className='roleBadge '+(u.role||'free');
+}
+async function applyUser(u){
+  renderUser(u);
+  try{localStorage.setItem('gilz_user',JSON.stringify(u));}catch{}
+  // sync ke backend kalo ada
+  try{
+    const r=await fetch('/api/auth/sync',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(u)});
+    if(r.ok){
+      const d=await r.json();
+      if(d.ok&&d.user){renderUser(d.user);try{localStorage.setItem('gilz_user',JSON.stringify(d.user));}catch{}}
+    }
+  }catch(e){/* backend gada, gapapa pake localStorage */}
   toast('Selamat datang, '+(u.name||'User')+'! 🎉','ok');
 }
 function doLogoutApp(){
@@ -811,6 +823,24 @@ function doLogoutApp(){
   document.getElementById('logoutBtn').style.display='none';
   toast('Sampai jumpa! 👋','wr');
 }
+async function restoreSession(){
+  const saved=localStorage.getItem('gilz_user');
+  if(saved){
+    try{
+      const u=JSON.parse(saved);
+      // coba fetch dari backend kalo ada (untuk dapat role terbaru)
+      try{
+        const r=await fetch('/api/auth/me?email='+encodeURIComponent(u.email||''));
+        if(r.ok){const d=await r.json();if(d.ok&&d.user){renderUser(d.user);localStorage.setItem('gilz_user',JSON.stringify(d.user));return true;}}
+      }catch{}
+      renderUser(u);
+      return true;
+    }catch(e){}
+  }
+  document.getElementById('loginWall').classList.remove('hidden');
+  return false;
+}
+function requireLogin(){return !!currentUser;}
 function emailLogin(){
   const name=document.getElementById('liName').value.trim();
   const email=document.getElementById('liEmail').value.trim();
@@ -835,12 +865,6 @@ function googleLogin(){
     }).requestAccessToken();
   }catch(e){showLoginErr('Google login error: '+e.message);}
 }
-function requireLogin(){
-  const saved=localStorage.getItem('gilz_user');
-  if(saved){try{const u=JSON.parse(saved);applyUser(u);return true;}catch(e){}}
-  document.getElementById('loginWall').classList.remove('hidden');
-  return false;
-}
 /* ========= BUY SC ========= */
 let _curBuy=null;
 function openBuyForm(id,label){
@@ -851,38 +875,38 @@ function openBuyForm(id,label){
   if(document.getElementById('bfName'))document.getElementById('bfName').value=currentUser.name||'';
   document.getElementById('buyFormBlock').scrollIntoView({behavior:'smooth',block:'start'});
 }
-function submitBuy(){
+async function submitBuy(){
   const name=document.getElementById('bfName').value.trim();
   const num=document.getElementById('bfNum').value.replace(/\D/g,'');
+  const note=document.getElementById('bfNote').value.trim();
   if(!name){toast('Isi nama dulu','err');return;}
   if(!num.startsWith('62')||num.length<10){toast('Nomor WA formatnya 62xxx','err');return;}
-  const note=document.getElementById('bfNote').value.trim();
-  const msg=encodeURIComponent('Halo Gilz, saya mau beli *'+_curBuy.label+'*\n\nNama: '+name+'\nNomor WA: +'+num+'\n'+(note?'Catatan: '+note+'\n':'')+'\nMohon info pembayaran 🙏');
-  try{const o=JSON.parse(localStorage.getItem('gilz_orders')||'[]');o.push({item:_curBuy.id,label:_curBuy.label,name,num,note,t:Date.now()});localStorage.setItem('gilz_orders',JSON.stringify(o));}catch{}
+  const payload={item:_curBuy.id,label:_curBuy.label,name,num,note,email:currentUser?.email||''};
+  try{await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});}catch(e){/* backend gada simpan lokal */}
+  try{const o=JSON.parse(localStorage.getItem('gilz_orders')||'[]');o.push({...payload,t:Date.now()});localStorage.setItem('gilz_orders',JSON.stringify(o));}catch{}
   document.getElementById('buyFormBlock').style.display='none';
+  const msg=encodeURIComponent('Halo Gilz, saya mau beli *'+_curBuy.label+'*\n\nNama: '+name+'\nNomor WA: +'+num+'\n'+(note?'Catatan: '+note+'\n':'')+'\nMohon info pembayaran 🙏');
   toast('Mengarahkan ke WA admin...','ok');
   setTimeout(()=>window.open('https://wa.me/6281990767636?text='+msg,'_blank'),600);
 }
-function submitOwnerReq(){
+async function submitOwnerReq(){
   const name=document.getElementById('orName').value.trim();
   const num=document.getElementById('orNum').value.replace(/\D/g,'');
   const reason=document.getElementById('orReason').value.trim();
   const paket=document.getElementById('orPaket').value;
+  const bukti=document.getElementById('orBukti').value.trim();
   if(!name||!num||!reason){toast('Isi semua field bertanda *','err');return;}
   if(!num.startsWith('62')||num.length<10){toast('Nomor WA formatnya 62xxx','err');return;}
-  const bukti=document.getElementById('orBukti').value.trim();
+  const payload={name,num,reason,paket,bukti,email:currentUser?.email||''};
+  try{await fetch('/api/owner-req',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});}catch(e){}
+  try{const r=JSON.parse(localStorage.getItem('gilz_ownerreq')||'[]');r.push({...payload,t:Date.now()});localStorage.setItem('gilz_ownerreq',JSON.stringify(r));}catch{}
   const msg=encodeURIComponent('Halo Gilz, saya mau *daftar jadi Owner bot*\n\nNama: '+name+'\nNomor WA: +'+num+'\nPaket: '+paket.toUpperCase()+'\nAlasan: '+reason+'\n'+(bukti?'Bukti: '+bukti+'\n':'')+'\nMohon ditindaklanjuti 🙏');
-  try{const r=JSON.parse(localStorage.getItem('gilz_ownerreq')||'[]');r.push({name,num,reason,paket,bukti,t:Date.now()});localStorage.setItem('gilz_ownerreq',JSON.stringify(r));}catch{}
   toast('Mengarahkan ke WA admin...','ok');
   setTimeout(()=>window.open('https://wa.me/6281990767636?text='+msg,'_blank'),600);
 }
-</script>
-<script>
+
 /* =======================================================
-   GilzzzBotzz Dashboard - v3 REAL API
-   - Auto-detect backend (/api/status)
-   - Kalo backend ada (Node server jalan) -> pake API beneran (SSE, pairing, QR, owner, settings, logs, restart, logout)
-   - Kalo cuma dibuka di GitHub Pages / file:// -> fallback ke mode SIMULASI (biar keliatan hidup)
+   GilzzzBotzz Dashboard - v4 REAL API + AUTH
 ======================================================= */
 const API_BASE = (location.port === '3000' || location.hostname === 'localhost' || location.hostname === '127.0.0.1') ? '' : '';
 // biar flexible: coba hit /api/status dulu, kalo ada ya pake, kalo gada -> sim
@@ -907,19 +931,20 @@ function go(v){
 }
 // ENTER key di form login
 document.addEventListener('DOMContentLoaded',()=>{
-  ['liName','liEmail'].forEach(id=>{const i=document.getElementById(id);if(i)i.addEventListener('keydown',e=>{if(e.key==='Enter')emailLogin();});});
+  ['liName','liEmail'].forEach(id=>{
+    const i=document.getElementById(id);
+    if(i)i.addEventListener('keydown',e=>{if(e.key==='Enter')emailLogin();});
+  });
+  // pastikan tidak ada overlay yg nyangkut (backdrop)
+  const bd=document.getElementById('backdrop');if(bd)bd.classList.remove('show');
 });
 window.addEventListener('resize',()=>document.querySelector('main').classList.toggle('sb-open',sidebar.classList.contains('open')&&window.innerWidth>=1024));
 
 /* ========= TOAST ========= */
 function toast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(type==='err'?'err':type==='wr'?'wr':'');setTimeout(()=>t.className='toast',2800);}
 
-/* ========= STATE ========= */
-const API_BASE='';
-let BACKEND=false;
-let es=null;
+/* ========= STATE (lanjutan) ========= */
 let wizardStep=1;
-let pairTimer=null;
 let pairNumberVal='';
 let pairingCodeVal='';
 let pairingStarted=false;
@@ -1311,8 +1336,8 @@ function drawChart(){const cv=document.getElementById('chart');if(!cv)return;con
 
 /* ========= BOOT ========= */
 async function boot(){
-  // Awal: cek login dulu
-  const logged=requireLogin();
+  // Restore session dari localStorage + backend
+  await restoreSession();
   // Awal: OFFLINE sampai beneran connected
   setStatusPill(false,'Belum tertaut');
   document.getElementById('dashStatus').textContent='OFFLINE';
