@@ -1,68 +1,630 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jadibotgilz</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>GilzzzBotzz — Dashboard Bot WhatsApp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+:root{
+  --bg:#0a1310;--bg2:#0f1d18;--card:#14241f;--card2:#1a302a;
+  --green:#25d366;--green2:#128c7e;--green3:#075e54;--gold:#ffd166;
+  --purple:#c084fc;--pink:#f472b6;--blue:#38bdf8;
+  --text:#eafff6;--text2:#93b3a8;--muted:#627d74;
+  --border:#1f3730;--danger:#ef4444;--warn:#f59e0b;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);overflow-x:hidden;}
+body{background:
+  radial-gradient(900px 600px at -10% -20%, rgba(37,211,102,.10), transparent 60%),
+  radial-gradient(700px 500px at 110% 10%, rgba(18,140,126,.09), transparent 60%),
+  radial-gradient(500px 400px at 50% 110%, rgba(255,209,102,.05), transparent 60%),
+  var(--bg);}
+::-webkit-scrollbar{width:8px;height:8px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px;}
+::-webkit-scrollbar-thumb:hover{background:var(--green3);}
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+/* TOPBAR */
+.topbar{position:fixed;top:0;left:0;right:0;height:62px;background:rgba(10,19,16,.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 18px;z-index:50;}
+.burger{width:40px;height:40px;border-radius:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;background:transparent;border:none;transition:background .2s;}
+.burger:hover{background:var(--card);}
+.burger span{display:block;width:22px;height:2px;background:var(--text);border-radius:3px;transition:.25s;}
+.burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.burger.open span:nth-child(2){opacity:0;}
+.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.logo{display:flex;align-items:center;gap:10px;margin-left:10px;font-weight:800;font-size:19px;letter-spacing:.3px;}
+.logo .dot{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green);animation:pulse 1.6s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.85)}}
+.logo b{background:linear-gradient(135deg,#25d366,#34f5a1 60%,#ffd166);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.topRight{margin-left:auto;display:flex;gap:10px;align-items:center;}
+.pill{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--text2);padding:8px 14px;background:var(--card);border:1px solid var(--border);border-radius:20px;font-weight:500;}
+.pill .led{width:8px;height:8px;border-radius:50%;background:var(--danger);box-shadow:0 0 0 rgba(239,68,68,0);}
+.pill.ok .led{background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 1.6s infinite;}
+.avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#25d366,#075e54);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;border:2px solid var(--border);cursor:pointer;}
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: Arial, sans-serif;
-      background: #0f0f0f;
-      color: white;
-      text-align: center;
-    }
+/* SIDEBAR */
+.sidebar{position:fixed;top:62px;left:0;bottom:0;width:280px;background:var(--bg2);border-right:1px solid var(--border);transform:translateX(-100%);transition:transform .3s cubic-bezier(.4,.2,.2,1);z-index:40;padding:14px 10px;overflow-y:auto;}
+.sidebar.open{transform:translateX(0);}
+.sideLink{display:flex;align-items:center;gap:13px;padding:12px 14px;border-radius:12px;color:var(--text2);cursor:pointer;font-weight:500;font-size:14px;transition:.18s;margin-bottom:3px;}
+.sideLink:hover{background:var(--card);color:var(--text);}
+.sideLink.active{background:linear-gradient(135deg,rgba(37,211,102,.18),rgba(18,140,126,.12));color:var(--green);border:1px solid rgba(37,211,102,.25);}
+.sideLink .ic{width:24px;text-align:center;font-size:18px;}
+.sideLink .badge{margin-left:auto;background:var(--danger);color:#fff;font-size:10px;font-weight:700;border-radius:8px;padding:2px 7px;}
+.sideLink.active .badge{background:var(--green);}
+.sideH{font-size:11px;letter-spacing:1.5px;color:var(--muted);opacity:.8;text-transform:uppercase;margin:18px 14px 8px;font-weight:700;}
+.sideFoot{position:sticky;bottom:8px;margin-top:18px;padding:14px;border-radius:13px;background:linear-gradient(135deg,rgba(37,211,102,.15),rgba(255,209,102,.10));border:1px solid rgba(37,211,102,.22);font-size:12px;color:var(--text2);}
+.sideFoot b{color:var(--green);display:block;margin-bottom:4px;font-size:13px;}
+.backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:39;opacity:0;pointer-events:none;transition:opacity .3s;}
+.backdrop.show{opacity:1;pointer-events:auto;}
 
-    .container {
-      padding: 30px;
-    }
+/* MAIN */
+main{margin-top:62px;padding:26px 22px 70px;transition:padding-left .3s;max-width:1280px;margin-inline:auto;}
+.pageTitle{font-size:26px;font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:10px;}
+.pageTitle .emoji{font-size:28px;}
+.sub{color:var(--text2);font-size:14px;margin-bottom:24px;}
 
-    h1 {
-      font-size: 42px;
-      margin-bottom: 10px;
-    }
+/* GRID STATS */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:22px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px;position:relative;overflow:hidden;transition:transform .2s, border-color .2s;}
+.card:hover{transform:translateY(-2px);border-color:var(--green3);}
+.card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(37,211,102,.07),transparent 50%);pointer-events:none;}
+.card .label{font-size:11px;letter-spacing:1.3px;color:var(--muted);text-transform:uppercase;margin-bottom:10px;font-weight:700;}
+.card .val{font-size:28px;font-weight:800;line-height:1;}
+.card .val.g{color:var(--green);}
+.card .val.go{color:var(--gold);}
+.card .val.b{color:var(--blue);}
+.card .val.p{color:var(--purple);}
+.card .foot{margin-top:10px;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.card .mini{height:4px;background:var(--card2);border-radius:4px;margin-top:12px;overflow:hidden;}
+.card .mini i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--green2));border-radius:4px;}
+.card .ic-bg{position:absolute;right:-10px;bottom:-16px;font-size:86px;opacity:.08;pointer-events:none;}
 
-    p {
-      color: #aaa;
-      font-size: 17px;
-    }
+/* PANEL */
+.panel{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:22px;margin-bottom:18px;}
+.panel h2{font-size:17px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:10px;}
+.panel h2::before{content:'';width:4px;height:20px;background:linear-gradient(180deg,var(--green),var(--green2));border-radius:4px;}
+.panel .desc{color:var(--text2);font-size:13px;margin-bottom:16px;}
 
-    button {
-      margin-top: 20px;
-      padding: 12px 22px;
-      border: 0;
-      border-radius: 10px;
-      background: white;
-      color: black;
-      font-weight: bold;
-      cursor: pointer;
-    }
+/* BUTTONS */
+.btn{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;border:none;padding:11px 20px;border-radius:12px;font-weight:600;cursor:pointer;font-size:13px;transition:transform .15s,box-shadow .2s;display:inline-flex;align-items:center;gap:8px;font-family:inherit;text-decoration:none;}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,211,102,.3);}
+.btn.gold{background:linear-gradient(135deg,#fbbf24,#f59e0b);box-shadow:0 4px 14px rgba(245,158,11,.2);}
+.btn.gold:hover{box-shadow:0 8px 24px rgba(245,158,11,.35);}
+.btn.purple{background:linear-gradient(135deg,#c084fc,#9333ea);}
+.btn.blue{background:linear-gradient(135deg,#38bdf8,#0284c7);}
+.btn.outline{background:transparent;border:1px solid var(--border);color:var(--text);}
+.btn.outline:hover{background:var(--card2);}
+.btn.danger{background:linear-gradient(135deg,#ef4444,#b91c1c);}
+.btn.sm{padding:8px 14px;font-size:12px;border-radius:10px;}
+.btn-block{width:100%;justify-content:center;}
+.row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;align-items:center;}
+.sp{flex:1;}
 
-    button:hover {
-      opacity: 0.8;
-    }
-  </style>
+/* INPUT */
+input[type=text],input[type=tel],input[type=number],select,textarea{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-size:14px;outline:none;transition:border-color .2s;font-family:inherit;resize:vertical;}
+input:focus,select:focus,textarea:focus{border-color:var(--green);}
+label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bottom:6px;letter-spacing:.3px;}
+
+/* QR */
+.pairBox{display:grid;grid-template-columns:1fr;gap:22px;align-items:center;}
+@media(min-width:780px){.pairBox{grid-template-columns:320px 1fr;}}
+.qr{background:#fff;border-radius:16px;padding:22px;display:flex;align-items:center;justify-content:center;aspect-ratio:1;position:relative;box-shadow:0 10px 40px rgba(0,0,0,.3);}
+.qr canvas,.qr img{width:100%;height:100%;border-radius:10px;}
+.qrOverlay{position:absolute;inset:0;background:rgba(255,255,255,.96);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;color:#0b1410;font-weight:600;}
+.codeBox{background:var(--card2);border:2px dashed var(--green);border-radius:14px;padding:16px 18px;text-align:center;max-width:100%;}
+.codeBox .tiny{font-size:11px;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+.codeBox .code{font-family:'Courier New',monospace;font-size:30px;font-weight:800;letter-spacing:4px;color:var(--green);}
+.codeBox .hint{font-size:11px;color:var(--text2);margin-top:8px;}
+.steps{display:flex;flex-direction:column;gap:12px;}
+.step{display:flex;gap:12px;align-items:flex-start;}
+.step .num{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;}
+.step .body{flex:1;}
+.step .body b{display:block;font-size:13px;margin-bottom:2px;}
+.step .body span{font-size:12px;color:var(--text2);line-height:1.5;}
+
+/* TOGGLE SWITCH */
+.switch{position:relative;display:inline-block;width:44px;height:24px;}
+.switch input{display:none;}
+.switch .slider{position:absolute;inset:0;background:var(--card2);border:1px solid var(--border);border-radius:20px;cursor:pointer;transition:.25s;}
+.switch .slider::before{content:'';position:absolute;width:18px;height:18px;left:2px;top:2px;background:var(--muted);border-radius:50%;transition:.25s;}
+.switch input:checked + .slider{background:linear-gradient(135deg,var(--green),var(--green2));border-color:transparent;}
+.switch input:checked + .slider::before{transform:translateX(20px);background:#fff;}
+.setting{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);}
+.setting:last-child{border-bottom:none;}
+.setting .inf{flex:1;}
+.setting .inf b{font-size:13px;display:block;}
+.setting .inf span{font-size:12px;color:var(--text2);}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;margin-top:14px;font-size:13px;}
+.tbl th{text-align:left;padding:10px 12px;font-size:11px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;border-bottom:1px solid var(--border);font-weight:700;}
+.tbl td{padding:12px;border-bottom:1px solid var(--border);}
+.tbl tr:hover td{background:var(--card2);}
+.tag{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;}
+.tag.on{background:rgba(37,211,102,.15);color:var(--green);}
+.tag.off{background:rgba(239,68,68,.15);color:var(--danger);}
+.tag.adm{background:rgba(255,209,102,.15);color:var(--gold);}
+.tag.prem{background:rgba(192,132,252,.15);color:var(--purple);}
+
+/* COMMAND GRID */
+.cmdGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:14px;}
+.cmd{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:13px;transition:.15s;}
+.cmd:hover{border-color:var(--green3);background:var(--card);}
+.cmd .pre{font-family:'Courier New',monospace;color:var(--green);font-weight:700;font-size:13px;}
+.cmd .nm{font-size:12px;color:var(--text2);margin-top:3px;}
+
+/* FEATURES */
+.feats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:14px;}
+.feat{background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:6px;transition:.2s;}
+.feat:hover{transform:translateY(-3px);border-color:var(--green3);}
+.feat .ic{font-size:24px;margin-bottom:4px;}
+.feat b{font-size:13px;}
+.feat span{font-size:12px;color:var(--text2);line-height:1.4;}
+
+/* CONTACT */
+.contactGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:14px;}
+.contact{background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:16px;display:flex;gap:13px;align-items:center;transition:.2s;}
+.contact:hover{border-color:var(--green3);}
+.contact .ic{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--green),var(--green2));display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.contact b{display:block;font-size:14px;margin-bottom:2px;}
+.contact a{color:var(--green);font-size:13px;text-decoration:none;word-break:break-all;}
+.contact a:hover{text-decoration:underline;}
+
+/* LOG */
+.log{background:#060c0a;border:1px solid var(--border);border-radius:12px;padding:14px;font-family:'Courier New',monospace;font-size:12px;color:#82d6a8;max-height:280px;overflow-y:auto;margin-top:14px;line-height:1.7;}
+.log .ok{color:var(--green);}.log .wr{color:var(--warn);}.log .er{color:var(--danger);}.log .ts{color:var(--muted);opacity:.7;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card);border:1px solid var(--green);color:var(--text);padding:12px 20px;border-radius:14px;font-size:13px;font-weight:500;z-index:200;opacity:0;pointer-events:none;transition:.3s;box-shadow:0 10px 40px rgba(0,0,0,.4);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.err{border-color:var(--danger);}
+
+/* CHART */
+.chart{width:100%;height:180px;margin-top:10px;}
+.hidden{display:none !important;}
+
+/* HERO BANNER */
+.hero{background:linear-gradient(135deg,rgba(37,211,102,.18),rgba(7,94,84,.35) 60%,rgba(255,209,102,.10));border:1px solid var(--border);border-radius:22px;padding:26px;margin-bottom:20px;position:relative;overflow:hidden;display:grid;grid-template-columns:1fr;gap:16px;align-items:center;}
+@media(min-width:780px){.hero{grid-template-columns:1fr auto;padding:32px;}}
+.hero h1{font-size:28px;font-weight:800;line-height:1.2;margin-bottom:8px;}
+.hero h1 span{color:var(--green);}
+.hero p{color:var(--text2);font-size:14px;line-height:1.6;max-width:520px;margin-bottom:14px;}
+.hero .emojiBig{font-size:110px;filter:drop-shadow(0 8px 24px rgba(37,211,102,.3));text-align:center;}
+
+/* RECENT ACTIVITY */
+.act{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--border);}
+.act:last-child{border-bottom:none;}
+.act .ico{width:36px;height:36px;border-radius:50%;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.act .tx{flex:1;font-size:13px;}
+.act .tx b{display:block;}
+.act .tx span{color:var(--text2);font-size:12px;}
+.act .tx .tm{color:var(--muted);font-size:11px;margin-top:2px;}
+
+/* TABS */
+.tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap;border-bottom:1px solid var(--border);padding-bottom:10px;}
+.tab{padding:8px 16px;border-radius:20px;background:transparent;border:1px solid transparent;color:var(--text2);cursor:pointer;font-size:13px;font-weight:500;font-family:inherit;transition:.15s;}
+.tab:hover{background:var(--card);color:var(--text);}
+.tab.active{background:var(--card);border-color:var(--green);color:var(--green);}
+
+@media(min-width:1024px){main.sb-open{padding-left:300px;}}
+@media(max-width:520px){.pageTitle{font-size:22px;}.card .val{font-size:24px;}.hero h1{font-size:22px;}.hero .emojiBig{font-size:70px;}}
+</style>
 </head>
-
 <body>
 
-  <div class="container">
-    <h1>Jadibotgilz</h1>
-    <p>GitHub Pages berhasil aktif 🚀</p>
+<div class="topbar">
+  <button class="burger" id="burger"><span></span><span></span><span></span></button>
+  <div class="logo"><span class="dot"></span><b>GilzzzBotzz</b></div>
+  <div class="topRight">
+    <div class="pill" id="status"><span class="led"></span><span id="statusText">Offline</span></div>
+    <div class="avatar" title="Akun">G</div>
+  </div>
+</div>
+<div class="backdrop" id="backdrop"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sideH">Utama</div>
+  <div class="sideLink active" data-view="dashboard"><span class="ic">🏠</span> Dashboard</div>
+  <div class="sideLink" data-view="pair"><span class="ic">📱</span> Tautkan Perangkat</div>
+  <div class="sideLink" data-view="owner"><span class="ic">👑</span> Owner Bot</div>
+  <div class="sideH">Kelola</div>
+  <div class="sideLink" data-view="inbox"><span class="ic">💬</span> Pesan <span class="badge">12</span></div>
+  <div class="sideLink" data-view="groups"><span class="ic">👥</span> Grup</div>
+  <div class="sideLink" data-view="features"><span class="ic">⚡</span> Fitur</div>
+  <div class="sideLink" data-view="commands"><span class="ic">📝</span> Daftar Command</div>
+  <div class="sideLink" data-view="settings"><span class="ic">⚙️</span> Pengaturan</div>
+  <div class="sideH">Lainnya</div>
+  <div class="sideLink" data-view="logs"><span class="ic">📜</span> Log Aktivitas</div>
+  <div class="sideLink" data-view="premium"><span class="ic">💎</span> Premium</div>
+  <div class="sideLink" data-view="tutorial"><span class="ic">📘</span> Panduan Install</div>
+  <div class="sideLink" data-view="contact"><span class="ic">📞</span> Hubungi Gilz</div>
+  <div class="sideFoot"><b>🎨 GilzzzBotzz v2.5</b>by Gilz · build stabil.<br>NodeJS + Baileys MD.</div>
+</aside>
 
-    <button onclick="alert('Website berhasil dijalankan!')">
-      Test Website
-    </button>
+<main id="main">
+
+<!-- DASHBOARD -->
+<section class="view" id="view-dashboard">
+  <div class="hero">
+    <div>
+      <h1>Halo, selamat datang di <span>GilzzzBotzz</span> 🤖</h1>
+      <p>Bot WhatsApp multifungsi buatan Gilz — anti-link, downloader, welcome, AI, game, broadcast, anti-spam, dan 40+ fitur lain. Tautkan nomormu dan bot langsung jalan 24/7.</p>
+      <div class="row" style="margin:0">
+        <button class="btn" onclick="go('pair')">📱 Mulai Tautkan Perangkat</button>
+        <button class="btn gold" onclick="go('features')">⚡ Lihat Fitur</button>
+      </div>
+    </div>
+    <div class="emojiBig">🤖</div>
   </div>
 
+  <div class="title" style="font-size:20px">Ringkasan</div>
+  <div class="sub">Statistik bot kamu secara real-time.</div>
+  <div class="grid">
+    <div class="card"><div class="label">Status</div><div class="val g" id="dashStatus">ONLINE</div><div class="foot">● perangkat tertaut</div><div class="mini"><i style="width:100%"></i></div><div class="ic-bg">🟢</div></div>
+    <div class="card"><div class="label">Pesan Hari Ini</div><div class="val b" id="dashPesan">1,284</div><div class="foot">📈 +18% dari kemarin</div><div class="mini"><i style="width:72%"></i></div><div class="ic-bg">💬</div></div>
+    <div class="card"><div class="label">Command Dipakai</div><div class="val">342</div><div class="foot">⚡ command terbanyak: .play</div><div class="mini"><i style="width:54%"></i></div><div class="ic-bg">⚡</div></div>
+    <div class="card"><div class="label">Grup Terdaftar</div><div class="val p">47</div><div class="foot">👥 32 grup aktif hari ini</div><div class="mini"><i style="width:68%"></i></div><div class="ic-bg">👥</div></div>
+    <div class="card"><div class="label">Owner</div><div class="val go" id="dashOwner">+62 8199-0767-636</div><div class="foot">👑 Gilz</div><div class="ic-bg">👑</div></div>
+    <div class="card"><div class="label">Uptime</div><div class="val">3j 24m</div><div class="foot">⏱ sejak terakhir restart</div><div class="mini"><i style="width:42%"></i></div><div class="ic-bg">⏱</div></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr;gap:18px;">
+    <div class="panel">
+      <h2>Aktivitas Terbaru</h2>
+      <p class="desc">Aksi bot 5 menit terakhir.</p>
+      <div id="recentAct">
+        <div class="act"><div class="ico">✅</div><div class="tx"><b>Berhasil menjawab .menu</b><span>di grup Kelas 12 IPA 1</span><div class="tm">baru saja</div></div></div>
+        <div class="act"><div class="ico">⛔</div><div class="tx"><b>Pesan dihapus (link)</b><span>+62 812-xxxx kirim link di grup Free</span><div class="tm">2 menit lalu</div></div></div>
+        <div class="act"><div class="ico">🎵</div><div class="tx"><b>Song request .play terkirim</b><span>ke +62 857-xxxx</span><div class="tm">4 menit lalu</div></div></div>
+        <div class="act"><div class="ico">👋</div><div class="tx"><b>Welcome anggota baru</b><span>3 anggota bergabung di Grup Wibu Indo</span><div class="tm">8 menit lalu</div></div></div>
+        <div class="act"><div class="ico">🤖</div><div class="tx"><b>Auto-respon AI aktif</b><span>29 respon hari ini</span><div class="tm">12 menit lalu</div></div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Aktifitas 7 Hari Terakhir</h2>
+      <canvas class="chart" id="chart"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- PAIR -->
+<section class="view hidden" id="view-pair">
+  <div class="pageTitle"><span class="emoji">📱</span> Tautkan Perangkat</div>
+  <div class="sub">Hubungkan WhatsApp kamu — scan QR atau masukin kode pairing.</div>
+  <div class="panel">
+    <div class="pairBox">
+      <div class="qr" id="qrBox">
+        <canvas id="qrCanvas"></canvas>
+        <div class="qrOverlay" id="qrOverlay"><div style="font-size:40px">🔗</div><div id="qrMsg">Menyiapkan kode...</div></div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:12px">Cara Hubungkan</h3>
+        <div class="steps">
+          <div class="step"><div class="num">1</div><div class="body"><b>Buka WhatsApp di HP</b><span>Android / iPhone sama-sama bisa.</span></div></div>
+          <div class="step"><div class="num">2</div><div class="body"><b>Masuk menu Perangkat Tertaut</b><span>Tap ⋮ (atas kanan) → Perangkat tertaut → Tautkan perangkat.</span></div></div>
+          <div class="step"><div class="num">3</div><div class="body"><b>Pilih "Tautkan dengan nomor telepon"</b><span>Masukkan kode delapan huruf di bawah ini ATAU scan QR di samping.</span></div></div>
+        </div>
+        <div class="codeBox" id="codeBox" style="margin-top:18px">
+          <div class="tiny">Kode Pairing (8 huruf)</div>
+          <div class="code" id="pairCode">––––––––</div>
+          <div class="hint">kode otomatis baru tiap 60 detik · pastikan internet stabil</div>
+        </div>
+        <div class="row">
+          <button class="btn" onclick="refreshPair()">🔄 Refresh Kode</button>
+          <button class="btn outline" onclick="resetPair()">🔌 Putuskan</button>
+          <button class="btn purple" onclick="toast('kode disalin!','ok');navigator.clipboard&&navigator.clipboard.writeText(document.getElementById('pairCode').textContent)">📋 Salin Kode</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>Log Koneksi</h2>
+    <div class="log" id="pairLog"><div><span class="ts">[siap]</span> menunggu inisiasi...</div></div>
+  </div>
+</section>
+
+<!-- OWNER -->
+<section class="view hidden" id="view-owner">
+  <div class="pageTitle"><span class="emoji">👑</span> Owner Bot</div>
+  <div class="sub">Nomor yang punya kontrol penuh atas bot (semua command admin).</div>
+  <div class="panel">
+    <form class="ownerForm" id="ownerForm" onsubmit="saveOwner(event)" style="max-width:460px">
+      <label>Nomor WhatsApp Owner (format 62xxx)</label>
+      <input type="tel" id="ownerNum" placeholder="contoh: 6281990767636" required>
+      <div style="font-size:12px;color:var(--text2);margin-top:6px">Default pemilik: <b style="color:var(--gold)">081990767636 (Gilz)</b></div>
+      <div class="row">
+        <button type="submit" class="btn gold">👑 Simpan sebagai Owner</button>
+        <button type="button" class="btn outline" onclick="fillGilz()">Isi Nomor Gilz</button>
+      </div>
+    </form>
+    <div id="ownerInfo" class="hidden" style="margin-top:22px;padding:18px;background:var(--card2);border:1px solid var(--border);border-radius:14px;max-width:460px">
+      <div style="font-size:12px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Owner Aktif</div>
+      <div style="font-size:22px;font-weight:700;color:var(--gold)" id="ownerNumDisp">—</div>
+      <div class="row"><button class="btn outline sm" onclick="clearOwner()">❌ Lepas Owner</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- INBOX -->
+<section class="view hidden" id="view-inbox">
+  <div class="pageTitle"><span class="emoji">💬</span> Pesan Masuk</div>
+  <div class="sub">12 chat baru yang belum dibaca.</div>
+  <div class="panel">
+    <div class="tabs"><button class="tab active">Semua</button><button class="tab">Belum Dibaca</button><button class="tab">Grup</button><button class="tab">Personal</button></div>
+    <table class="tbl">
+      <thead><tr><th>Nama</th><th>Tipe</th><th>Pesan Terakhir</th><th>Waktu</th><th></th></tr></thead>
+      <tbody>
+        <tr><td>📢 Grup Wibu Indo</td><td><span class="tag on">Grup</span></td><td>.menu dong min</td><td>1m</td><td><button class="btn sm">Balas</button></td></tr>
+        <tr><td>+62 812-34xx</td><td><span class="tag prem">Personal</span></td><td>min kok botnya ga respon?</td><td>3m</td><td><button class="btn sm">Balas</button></td></tr>
+        <tr><td>🎓 Kelas 12 IPA 1</td><td><span class="tag on">Grup</span></td><td>.stiker</td><td>5m</td><td><button class="btn sm">Balas</button></td></tr>
+        <tr><td>🛒 Toko Online</td><td><span class="tag adm">Admin</span></td><td>.broadcast udah?</td><td>12m</td><td><button class="btn sm">Balas</button></td></tr>
+        <tr><td>+62 857-xxxx</td><td><span class="tag on">Personal</span></td><td>makasih min botnya keren!</td><td>27m</td><td><button class="btn sm">Balas</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- GROUPS -->
+<section class="view hidden" id="view-groups">
+  <div class="pageTitle"><span class="emoji">👥</span> Kelola Grup</div>
+  <div class="sub">Bot aktif di 47 grup. Atur fitur per-grup.</div>
+  <div class="panel">
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin:0">
+      <div class="card"><div class="label">Grup Aktif</div><div class="val g">47</div><div class="foot">✅ bot aktif merespon</div></div>
+      <div class="card"><div class="label">Total Anggota</div><div class="val b">3.284</div><div class="foot">👥 akumulasi</div></div>
+      <div class="card"><div class="label">Anti Link</div><div class="val go">42</div><div class="foot">⛔ grup dengan anti-link on</div></div>
+      <div class="card"><div class="label">Welcome Msg</div><div class="val p">38</div><div class="foot">👋 pesan sambutan aktif</div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>Daftar Grup</h2>
+    <table class="tbl">
+      <thead><tr><th>Nama Grup</th><th>Anggota</th><th>Anti Link</th><th>Welcome</th><th></th></tr></thead>
+      <tbody id="groupBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="view hidden" id="view-features">
+  <div class="pageTitle"><span class="emoji">⚡</span> Fitur GilzzzBotzz</div>
+  <div class="sub">40+ fitur siap pakai, aktif secara default.</div>
+  <div class="panel">
+    <h2>Kategori Fitur</h2>
+    <div class="feats" id="featList"></div>
+  </div>
+</section>
+
+<!-- COMMANDS -->
+<section class="view hidden" id="view-commands">
+  <div class="pageTitle"><span class="emoji">📝</span> Daftar Command</div>
+  <div class="sub">Prefix default: <b style="color:var(--green)">.</b> (titik). Ketik di chat untuk menjalankan.</div>
+  <div class="panel">
+    <div class="tabs"><button class="tab active">Semua</button><button class="tab">Umum</button><button class="tab">Downloader</button><button class="tab">Grup</button><button class="tab">Owner</button><button class="tab">Fun/Game</button></div>
+    <div class="cmdGrid" id="cmdList"></div>
+  </div>
+</section>
+
+<!-- SETTINGS -->
+<section class="view hidden" id="view-settings">
+  <div class="pageTitle"><span class="emoji">⚙️</span> Pengaturan Bot</div>
+  <div class="sub">Atur perilaku bot sesuai selera.</div>
+  <div class="panel">
+    <h2>Umum</h2>
+    <div class="setting"><div class="inf"><b>Prefix Command</b><span>Simbol di awal command (contoh: .menu, !help)</span></div><input type="text" value="." style="width:60px;text-align:center;font-weight:700"></div>
+    <div class="setting"><div class="inf"><b>Nama Bot</b><span>Nama yang muncul di respon bot</span></div><input type="text" value="GilzzzBotzz" style="max-width:220px"></div>
+    <div class="setting"><div class="inf"><b>Auto-read pesan</b><span>Centang biru otomatis</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+    <div class="setting"><div class="inf"><b>Typing indicator</b><span>Kirim "sedang mengetik..." sebelum jawab</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+  </div>
+  <div class="panel">
+    <h2>Fitur Proteksi Grup</h2>
+    <div class="setting"><div class="inf"><b>Anti Link</b><span>Hapus pesan berisi link otomatis</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+    <div class="setting"><div class="inf"><b>Anti Toxic</b><span>Filter kata kasar</span></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
+    <div class="setting"><div class="inf"><b>Anti Spam</b><span>Peringatkan user yang spam chat</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+    <div class="setting"><div class="inf"><b>Welcome Message</b><span>Sambut anggota yang baru masuk</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+    <div class="setting"><div class="inf"><b>Anti Virtex</b><span>Blok pesan virtex/crash yang bikin WA lag</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+  </div>
+  <div class="panel">
+    <h2>AI & Respon</h2>
+    <div class="setting"><div class="inf"><b>AI Chat (Gemini)</b><span>Jawab pertanyaan otomatis pakai AI</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+    <div class="setting"><div class="inf"><b>Auto-respon sapaan</b><span>Balas "p", "hai", "assalamualaikum"</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+    <div class="setting"><div class="inf"><b>Bahasa</b><span>Bahasa respon bot</span></div>
+      <select style="max-width:180px"><option>Bahasa Indonesia</option><option>English</option><option>Jawa</option><option>Sunda</option></select>
+    </div>
+  </div>
+  <div class="row"><button class="btn" onclick="toast('Pengaturan tersimpan!','ok')">💾 Simpan Semua</button><button class="btn danger" onclick="if(confirm('yakin mau restart bot?'))toast('bot direstart...','wr')">🔄 Restart Bot</button></div>
+</section>
+
+<!-- LOGS -->
+<section class="view hidden" id="view-logs">
+  <div class="pageTitle"><span class="emoji">📜</span> Log Aktifitas</div>
+  <div class="sub">Riwayat lengkap aksi bot real-time.</div>
+  <div class="panel">
+    <div class="row">
+      <button class="btn" onclick="addL('ok','simulasi bot online ✓')">🔄 Tes Connect</button>
+      <button class="btn outline" onclick="clearLog()">🗑️ Bersihkan</button>
+      <select class="sp" style="max-width:180px"><option>Semua level</option><option>Info saja</option><option>Error saja</option></select>
+    </div>
+    <div class="log" id="logBox"></div>
+  </div>
+</section>
+
+<!-- PREMIUM -->
+<section class="view hidden" id="view-premium">
+  <div class="pageTitle"><span class="emoji">💎</span> Premium & Donasi</div>
+  <div class="sub">Dukung perkembangan GilzzzBotzz, dapatkan fitur eksklusif.</div>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+    <div class="card" style="border-color:var(--border)"><div class="label">FREE</div><div class="val" style="font-size:32px">Rp0</div><div class="foot">selamanya gratis</div><div style="margin-top:14px;font-size:13px;line-height:2"><div>✅ 40+ fitur dasar</div><div>✅ Max 5 grup</div><div>✅ Limit downloader wajar</div><div>❌ AI premium</div><div>❌ No watermark</div></div><div class="row"><button class="btn outline btn-block">Pakaimu Sekarang</button></div></div>
+    <div class="card" style="border-color:var(--gold);background:linear-gradient(180deg,rgba(255,209,102,.08),transparent);"><div class="label" style="color:var(--gold)">⭐ PRO BULANAN</div><div class="val go" style="font-size:32px">Rp15rb</div><div class="foot">per bulan</div><div style="margin-top:14px;font-size:13px;line-height:2"><div>✅ Semua fitur FREE</div><div>✅ Unlimited grup</div><div>✅ AI Premium (GPT-4o)</div><div>✅ No watermark stiker</div><div>✅ Priority support</div></div><div class="row"><button class="btn gold btn-block">💎 Upgrade Sekarang</button></div></div>
+    <div class="card" style="border-color:var(--purple)"><div class="label" style="color:var(--purple)">👑 LIFETIME</div><div class="val p" style="font-size:32px">Rp99rb</div><div class="foot">bayar sekali</div><div style="margin-top:14px;font-size:13px;line-height:2"><div>✅ Semua fitur PRO</div><div>✅ Update selamanya</div><div>✅ Bisa request fitur</div><div>✅ Nama bot custom</div><div>✅ Akses beta fitur</div></div><div class="row"><button class="btn purple btn-block">👑 Ambil Lifetime</button></div></div>
+  </div>
+  <div class="panel" style="margin-top:18px"><h2>Metode Pembayaran</h2><div class="contactGrid">
+    <div class="contact"><div class="ic">📱</div><div><b>DANA / OVO / GOPAY</b><a href="#">0819-9076-7636 (Gilz)</a></div></div>
+    <div class="contact"><div class="ic">🏦</div><div><b>BCA / BRI / BNI</b><a href="#">chat admin untuk nomor rekening</a></div></div>
+    <div class="contact"><div class="ic">💬</div><div><b>Konfirmasi bayar</b><a href="https://wa.me/6281990767636" target="_blank">wa.me/6281990767636</a></div></div>
+  </div></div>
+</section>
+
+<!-- TUTORIAL -->
+<section class="view hidden" id="view-tutorial">
+  <div class="pageTitle"><span class="emoji">📘</span> Panduan Install</div>
+  <div class="sub">Cara menjalankan GilzzzBotzz di VPS / RDP / Replit / laptopmu sendiri.</div>
+  <div class="panel"><h2>Persyaratan</h2><div class="steps" style="margin-top:14px">
+    <div class="step"><div class="num">1</div><div class="body"><b>Node.js 18+ / 20 LTS</b><span>Download di nodejs.org, jalankan installer.</span></div></div>
+    <div class="step"><div class="num">2</div><div class="body"><b>Download source bot</b><span>Dari link official / github GilzzzBotzz.</span></div></div>
+    <div class="step"><div class="num">3</div><div class="body"><b>Buka terminal / cmd di folder bot</b><span>Ketik <code style="color:var(--green);background:var(--card2);padding:2px 8px;border-radius:6px">npm install</code> lalu enter.</span></div></div>
+    <div class="step"><div class="num">4</div><div class="body"><b>Jalankan bot</b><span>Ketik <code style="color:var(--green);background:var(--card2);padding:2px 8px;border-radius:6px">npm start</code>, scan QR dari dashboard ini.</span></div></div>
+    <div class="step"><div class="num">5</div><div class="body"><b>Bot online 24/7</b><span>Daftarkan nomor owner, selesai!</span></div></div>
+  </div>
+  <div class="row"><a class="btn" href="https://wa.me/6281990767636" target="_blank">💬 Minta bantuan install</a><button class="btn outline" onclick="toast('link github disalin','ok')">📋 Salin link github</button></div>
+  <div style="margin-top:18px;padding:14px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:12px;font-size:13px;color:#fde68a"><b>💡 Tidak pakai Pterodactyl</b> — Pterodactyl itu panel buat game server (Minecraft, CS, dll). Bot WhatsApp jalan cuma dengan Node.js biasa, bisa di VPS, Replit, Railway, bahkan laptopmu dirumah.</div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="view hidden" id="view-contact">
+  <div class="pageTitle"><span class="emoji">📞</span> Hubungi Gilz</div>
+  <div class="sub">Butuh bantuan install, mau custom fitur, atau sekadar sapa?</div>
+  <div class="panel"><h2>Kontak Developer</h2><div class="contactGrid">
+    <div class="contact"><div class="ic">📱</div><div><b>WhatsApp Utama</b><a href="https://wa.me/6281990767636" target="_blank">+62 819-9076-7636</a></div></div>
+    <div class="contact"><div class="ic">📢</div><div><b>Saluran Channel</b><a href="https://whatsapp.com/channel/0029VbCjZUmBFLgaEVWV3G1J" target="_blank">GilzzzBotzz Channel</a></div></div>
+    <div class="contact"><div class="ic">💻</div><div><b>Github</b><a href="#">github.com/gilzzzbotzz</a></div></div>
+    <div class="contact"><div class="ic">⚡</div><div><b>Status Respon</b><a href="#">Online 08.00-23.00 WIB</a></div></div>
+  </div></div>
+</section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script>
+/* ========= NAV ========= */
+const burger=document.getElementById('burger'),sidebar=document.getElementById('sidebar'),backdrop=document.getElementById('backdrop');
+burger.onclick=()=>{burger.classList.toggle('open');sidebar.classList.toggle('open');backdrop.classList.toggle('show');};
+backdrop.onclick=()=>{burger.classList.remove('open');sidebar.classList.remove('open');backdrop.classList.remove('open');};
+document.querySelectorAll('.sideLink').forEach(l=>l.onclick=()=>go(l.dataset.view));
+function go(v){
+  document.querySelectorAll('.view').forEach(x=>x.classList.add('hidden'));
+  document.getElementById('view-'+v).classList.remove('hidden');
+  document.querySelectorAll('.sideLink').forEach(x=>x.classList.toggle('active',x.dataset.view===v));
+  if(window.innerWidth<1024){burger.classList.remove('open');sidebar.classList.remove('open');backdrop.classList.remove('open');}
+  document.querySelector('main').classList.toggle('sb-open',sidebar.classList.contains('open')&&window.innerWidth>=1024);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+window.addEventListener('resize',()=>document.querySelector('main').classList.toggle('sb-open',sidebar.classList.contains('open')&&window.innerWidth>=1024));
+
+/* ========= TOAST ========= */
+function toast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(type==='err'?'err':'');setTimeout(()=>t.className='toast',2500);}
+
+/* ========= PAIRING ========= */
+const pairCode=document.getElementById('pairCode'),pairLog=document.getElementById('pairLog'),qrCanvas=document.getElementById('qrCanvas'),qrOverlay=document.getElementById('qrOverlay'),qrMsg=document.getElementById('qrMsg');
+function randCode(){const a='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';let s='';for(let i=0;i<8;i++)s+=a[Math.floor(Math.random()*a.length)];return s.match(/.{1,4}/g).join('-');}
+function addLog(cls,msg){const t=new Date();const ts=String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0')+':'+String(t.getSeconds()).padStart(2,'0');const c=cls==='ok'?'ok':cls==='wr'?'wr':'er';pairLog.innerHTML+=`<div><span class="ts">[${ts}]</span> <span class="${c}">●</span> ${msg}</div>`;pairLog.scrollTop=pairLog.scrollHeight;}
+async function drawQR(text){try{qrOverlay.style.display='none';await QRCode.toCanvas(qrCanvas,text||'https://wa.me/6281990767636',{width:280,margin:2,color:{dark:'#075e54',light:'#fff'}});}catch(e){qrOverlay.style.display='flex';qrMsg.textContent='gagal memuat QR';}}
+let pairTimer=null;
+function refreshPair(){
+  clearInterval(pairTimer);
+  const code=randCode();pairCode.textContent=code;
+  qrOverlay.style.display='flex';qrMsg.innerHTML='<div style="font-size:38px">⏳</div>menghubungkan ke server...';
+  addLog('wr','meminta kode pairing baru...');
+  setTimeout(()=>{drawQR('https://wa.me/pair/'+code.replace(/-/g,''));addLog('ok','kode pairing siap: '+code);},700);
+  let sec=60;pairTimer=setInterval(()=>{sec--;if(sec<=0){addLog('wr','kode kadaluarsa, refresh...');refreshPair();}},1000);
+}
+function resetPair(){clearInterval(pairTimer);pairCode.textContent='––––––––';qrOverlay.style.display='flex';qrMsg.innerHTML='<div style="font-size:40px">🔗</div>klik "Refresh Kode"';toast('koneksi diputus','err');}
+
+/* ========= OWNER ========= */
+function saveOwner(e){e.preventDefault();const num=document.getElementById('ownerNum').value.replace(/\D/g,'');if(!num.startsWith('62')||num.length<10){toast('format nomor salah! pakai 62xxxx','err');return;}localStorage.setItem('gilz_owner',num);showOwner(num);toast('Owner tersimpan 👑','ok');}
+function showOwner(num){document.getElementById('ownerInfo').classList.remove('hidden');document.getElementById('ownerNumDisp').textContent='+'+num;}
+function clearOwner(){localStorage.removeItem('gilz_owner');document.getElementById('ownerInfo').classList.add('hidden');toast('owner dilepas','wr');}
+function fillGilz(){document.getElementById('ownerNum').value='6281990767636';}
+const saved=localStorage.getItem('gilz_owner');if(saved)showOwner(saved);
+
+/* ========= LOG PANEL ========= */
+function clearLog(){document.getElementById('logBox').innerHTML='<div><span class="ts">[clear]</span> log dibersihkan</div>';}
+function addL(type,txt){const b=document.getElementById('logBox');const t=new Date();const ts=String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0')+':'+String(t.getSeconds()).padStart(2,'0');const c=type==='ok'?'ok':type==='wr'?'wr':'er';b.innerHTML+=`<div><span class="ts">[${ts}]</span> <span class="${c}">●</span> ${txt}</div>`;b.scrollTop=b.scrollHeight;}
+
+/* ========= GROUPS LIST ========= */
+const groups=[
+  {n:'📢 Grup Wibu Indo',m:124,al:true,w:true},{n:'🎓 Kelas 12 IPA 1',m:36,al:true,w:true},
+  {n:'🛒 Toko Online',m:248,al:true,w:true},{n:'🎮 Free Fire Squad',m:48,al:false,w:true},
+  {n:'⚽ Fans Bola',m:87,al:true,w:false},{n:'🍜 Warung Makan',m:22,al:false,w:false},
+  {n:'📚 Belajar Kuy',m:16,al:true,w:true},{n:'🎵 Musik Indo',m:63,al:true,w:true},
+];
+const gbody=document.getElementById('groupBody');
+groups.forEach(g=>{gbody.innerHTML+=`<tr><td>${g.n}</td><td>${g.m}</td><td>${g.al?'<span class="tag on">ON</span>':'<span class="tag off">OFF</span>'}</td><td>${g.w?'<span class="tag on">ON</span>':'<span class="tag off">OFF</span>'}</td><td><button class="btn sm outline">Atur</button></td></tr>`;});
+
+/* ========= FEATURES LIST ========= */
+const feats=[
+  {i:'💬',n:'Auto Respon',d:'Balas pesan otomatis dengan kata kunci.'},
+  {i:'⛔',n:'Anti Link',d:'Hapus pesan link dan kick otomatis.'},
+  {i:'🎵',n:'Downloader',d:'YT, TikTok, IG, Reels, FB, Twitter.'},
+  {i:'👋',n:'Welcome Message',d:'Sambutan anggota baru + goodbye.'},
+  {i:'🛡️',n:'Anti Toxic',d:'Sensor kata kasar & warn otomatis.'},
+  {i:'🎮',n:'Game & RPG',d:'Tebak kata, suit, kuis, cak lontong.'},
+  {i:'📊',n:'Absen & Jadwal',d:'Absen kelas/jadwal piket.'},
+  {i:'💰',n:'Store/Topup',d:'Jual pulsa/game otomatis.'},
+  {i:'🔧',n:'Self Config',d:'Prefix, on/off fitur via chat.'},
+  {i:'📢',n:'Broadcast',d:'Kirim pesan ke semua grup/chat.'},
+  {i:'🤖',n:'AI Chat',d:'Gemini / GPT jawab apapun.'},
+  {i:'🔒',n:'Anti Spam',d:'Blok user spam chat/flood.'},
+  {i:'🎨',n:'Stiker Maker',d:'Foto jadi stiker, take stiker.'},
+  {i:'🗣️',n:'Voice Note',d:'Teks jadi suara (TTS).'},
+  {i:'🌐',n:'Translate',d:'Terjemah berbagai bahasa.'},
+  {i:'📌',n:'Pin Pesan',d:'Pin pesan penting di grup.'},
+  {i:'🔇',n:'Anti Virtex',d:'Blok pesan crash hp.'},
+  {i:'⚔️',n:'War & Battle',d:'Game war RPG antar member.'},
+];
+const fl=document.getElementById('featList');feats.forEach(f=>fl.innerHTML+=`<div class="feat"><div class="ic">${f.i}</div><b>${f.n}</b><span>${f.d}</span></div>`);
+
+/* ========= COMMANDS ========= */
+const cmds=[
+  {c:'.menu',d:'Tampilkan menu utama bot'},
+  {c:'.help',d:'Bantuan & daftar perintah'},
+  {c:'.ping',d:'Cek respon bot (Pong!)'},
+  {c:'.owner',d:'Info nomor pemilik bot'},
+  {c:'.play [judul]',d:'Download/cari lagu'},
+  {c:'.yt [link]',d:'Download video YouTube'},
+  {c:'.tiktok [link]',d:'Download video TikTok no WM'},
+  {c:'.ig [link]',d:'Download Instagram Reels'},
+  {c:'.stiker',d:'Ubah foto jadi stiker WA'},
+  {c:'.tts [teks]',d:'Text to voice note'},
+  {c:'.ai [tanya]',d:'Tanya AI Gemini'},
+  {c:'.translate',d:'Terjemah teks'},
+  {c:'.tebak',d:'Mulai game tebak kata'},
+  {c:'.suit',d:'Game suit jari'},
+  {c:'.quote',d:'Quote random'},
+  {c:'.jadian',d:'Tingkat jadian sama temen'},
+  {c:'.add',d:'Tambah user di grup (admin)'},
+  {c:'.kick',d:'Kick member grup (admin)'},
+  {c:'.mute',d:'Bisukan member grup'},
+  {c:'.antilink on/off',d:'Setting anti link grup'},
+  {c:'.welcome on/off',d:'Setting welcome message'},
+  {c:'.setprefix',d:'Ganti prefix command (owner)'},
+  {c:'.broadcast',d:'Kirim pesan ke semua chat'},
+  {c:'.restart',d:'Restart bot (owner only)'},
+];
+const cl=document.getElementById('cmdList');cmds.forEach(c=>cl.innerHTML+=`<div class="cmd"><div class="pre">${c.c}</div><div class="nm">${c.d}</div></div>`);
+
+/* ========= CHART (simple bar) ========= */
+function drawChart(){
+  const cv=document.getElementById('chart');if(!cv)return;
+  const ctx=cv.getContext('2d');const W=cv.width=cv.offsetWidth;const H=cv.height=180;ctx.clearRect(0,0,W,H);
+  const data=[420,650,380,820,1100,950,1284];const days=['S','S','R','K','J','S','M'];
+  const max=Math.max(...data)*1.1;const bw=W/(data.length*1.6);ctx.fillStyle='#152420';ctx.fillRect(0,0,W,H);
+  data.forEach((v,i)=>{const x=(W/data.length)*i+(W/data.length-bw)/2;const h=(v/max)*(H-30);const g=ctx.createLinearGradient(x,H,x,H-h);g.addColorStop(0,'#128c7e');g.addColorStop(1,'#25d366');ctx.fillStyle=g;ctx.fillRect(x,H-h,bw,h);ctx.fillStyle='#627d74';ctx.font='11px Poppins';ctx.textAlign='center';ctx.fillText(days[i],x+bw/2,H-8);ctx.fillStyle='#eafff6';ctx.font='10px Poppins';ctx.fillText(v>=1000?(v/1000).toFixed(1)+'k':v,x+bw/2,H-h-6);});
+}
+setTimeout(drawChart,200);window.addEventListener('resize',drawChart);
+
+/* ========= INIT ========= */
+document.getElementById('status').classList.add('ok');document.getElementById('statusText').textContent='Online';
+addLog('ok','sistem siap — menunggu pairing di tab Tautkan Perangkat');
+addLog('ok','owner default: 081990767636');
+addLog('ok','47 grup terdeteksi, 40+ fitur aktif');
+setTimeout(refreshPair,800);
+/* dummy log berjalan */
+setInterval(()=>{const msgs=[['ok','pesan diterima dari +62812-xxxx'],['ok','.menu diproses (12ms)'],['wr','user spam terdeteksi, diperingatkan'],['ok','broadcast terkirim ke 47 grup']];const m=msgs[Math.floor(Math.random()*msgs.length)];addL(m[0],m[1]);},7000);
+</script>
 </body>
 </html>
