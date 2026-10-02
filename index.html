@@ -198,10 +198,10 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
 .wiz-panel{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:32px;text-align:center;}
 .wiz-panel h2{font-size:22px;font-weight:800;margin:0 0 6px;}
 .wiz-panel p.sub2{color:var(--text2);font-size:14px;margin:0 0 22px;}
-.big-code{font-family:'Courier New',monospace;font-size:42px;font-weight:800;letter-spacing:6px;color:var(--green);background:var(--card2);border:2px dashed rgba(37,211,102,.4);border-radius:16px;padding:22px 16px;margin:20px 0;word-break:break-all;}
-.qr-big{background:#fff;border-radius:18px;padding:18px;display:inline-block;position:relative;margin:14px auto;}
-.qr-big canvas{display:block;}
-.qr-big .qrOverlay{position:absolute;inset:0;background:rgba(7,94,84,.92);border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;gap:10px;font-weight:600;}
+.big-code{font-family:'Courier New',monospace;font-weight:900;letter-spacing:10px;color:var(--green);background:var(--card2);border:3px dashed rgba(37,211,102,.5);border-radius:18px;padding:28px 20px;margin:20px auto;max-width:460px;text-align:center;user-select:all;font-size:52px;}
+/* QR tidak dipakai — pairing code only */
+.qr-big,#qrCanvas,.qr-big .qrOverlay{display:none!important;}
+.pairBox .qr{display:none!important;}
 .spinner{width:38px;height:38px;border:3px solid rgba(255,255,255,.25);border-top-color:#25d366;border-radius:50%;animation:spin .9s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .instructions{text-align:left;background:var(--card2);border-radius:14px;padding:16px 18px;margin-top:18px;font-size:13px;color:var(--text2);line-height:1.7;}
@@ -414,39 +414,32 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
       <div id="werr1" class="error-box" style="display:none"></div>
     </div>
 
-    <!-- STEP 2: QR + PAIRING CODE -->
+    <!-- STEP 2: KODE PAIRING (NO QR) -->
     <div class="wiz-panel" id="wstep2" style="display:none">
-      <div style="font-size:48px">🔗</div>
-      <h2>Scan QR / Masukkan Kode</h2>
-      <p class="sub2">Pilih salah satu cara dari HP kamu yang nomornya <b id="step2num"></b>.</p>
-      <div style="display:grid;grid-template-columns:1fr;gap:22px;align-items:start;" id="qrGrid">
-        <div style="text-align:center">
-          <div class="qr-big">
-            <canvas id="qrCanvas"></canvas>
-            <div class="qrOverlay" id="qrOverlay"><div class="spinner"></div><div id="qrMsg">Meminta QR dari server...</div></div>
-          </div>
-          <div style="font-size:12px;color:var(--text2);margin-top:6px">Scan pake WhatsApp → Perangkat Tertaut</div>
-        </div>
-        <div>
-          <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:8px">ATAU — pakai kode pairing:</div>
-          <div class="big-code" id="pairCode">––––––––</div>
-          <div class="row" style="justify-content:center;gap:8px">
-            <button class="btn sm" onclick="refreshQR()">🔄 Refresh</button>
-            <button class="btn sm purple" onclick="copyCode()">📋 Salin</button>
-          </div>
-          <div class="instructions">
-            <b>📝 Langkah di HP:</b>
-            <ol>
-              <li>Buka <b>WhatsApp</b> di nomor yang mau dijadikan bot</li>
-              <li>Tap <b>⋮ / ⚙️</b> → <b>Perangkat Tertaut</b> (Linked Devices)</li>
-              <li>Tap <b>"Tautkan Perangkat"</b> (Link a Device)</li>
-              <li>Pilih <b>"Tautkan dengan nomor telepon saja"</b> (Link with phone number)</li>
-              <li>Masukkan 8 huruf kode di atas, <b>ATAU</b> scan QR di samping</li>
-            </ol>
-          </div>
-        </div>
+      <div style="font-size:48px">🔑</div>
+      <h2>Masukkan Kode Pairing di HP</h2>
+      <p class="sub2">Kode buat nomor <b id="step2num" style="color:var(--green)"></b> adalah:</p>
+
+      <div class="big-code" id="pairCode" style="font-size:56px;letter-spacing:10px">––––––––</div>
+
+      <div id="waitConnect" class="connecting-pill" style="display:inline-flex"><span class="spinner"></span><span id="waitMsg">Meminta kode ke server...</span></div>
+
+      <div class="row" style="justify-content:center;gap:8px;margin-top:18px">
+        <button class="btn sm" onclick="refreshQR()">🔄 Minta Kode Baru</button>
+        <button class="btn sm purple" onclick="copyCode()">📋 Salin Kode</button>
       </div>
-      <div id="waitConnect" class="connecting-pill" style="display:none"><span class="spinner"></span><span id="waitMsg">Menunggu kamu scan / masukkan kode di HP...</span></div>
+
+      <div class="instructions" style="max-width:520px;margin:18px auto 0">
+        <b>📝 Langkah di HP (WAJIB):</b>
+        <ol>
+          <li>Buka <b>WhatsApp</b> di nomor <b id="step2num2" style="color:var(--green)"></b> (nomor yang mau dijadikan bot)</li>
+          <li>Tap <b>⋮ (titik tiga kanan atas)</b> → pilih <b>Perangkat Tertaut</b></li>
+          <li>Tap tombol <b>"Tautkan Perangkat"</b> (hilangin layar kunci jika diminta)</li>
+          <li>Tap tulisan <b style="color:var(--green)">"Tautkan dengan nomor telepon saja?"</b> di bawah</li>
+          <li>Masukkan 8 huruf kode di atas → tunggu sebentar, bot otomatis terhubung</li>
+        </ol>
+      </div>
+
       <div id="werr2" class="error-box" style="display:none"></div>
       <div class="row" style="justify-content:center;margin-top:22px">
         <button class="btn outline" onclick="wizardBack(1)">← Kembali</button>
@@ -998,28 +991,33 @@ function setStatusPill(connected,text){
   tx.textContent=text;
 }
 function updateStats(s){
-  if(!s)return;
+  const el=id=>document.getElementById(id);
+  if(!s||!s.isConnected){
+    el('dashStatus').textContent='OFFLINE';
+    el('dashPesan').textContent='—';
+    el('dashCmds').textContent='—';
+    el('statGroups').textContent='—';
+    el('dashOwner').textContent='belum tertaut';
+    el('dashUptime').textContent='—';
+    const foot=el('dashStatusFoot');if(foot)foot.textContent='● tautkan perangkat dulu';
+    ['dashStatusBar','dashPesanBar','dashCmdsBar','dashGroupsBar','dashUptimeBar'].forEach(id=>{const b=el(id);if(b)b.style.width='10%';});
+    setStatusPill(false,'Offline — belum tertaut');
+    return;
+  }
   const msgsToday=(s.stats?.messagesToday||0).toLocaleString('id-ID');
   const cmds=(s.stats?.commandsUsed||0).toLocaleString('id-ID');
-  const upt=s.isConnected?fmtUptime(s.uptime):'—';
-  const el=id=>document.getElementById(id);
-  el('dashStatus').textContent=s.isConnected?'ONLINE':'OFFLINE';
-  el('dashPesan').textContent=s.isConnected?msgsToday:'—';
-  el('dashCmds').textContent=s.isConnected?cmds:'—';
-  el('statGroups').textContent=s.stats?.groupsCount||'—';
-  el('dashOwner').textContent=s.isConnected&&s.botNumber?('+'+s.botNumber):'belum di set';
-  el('dashUptime').textContent=s.isConnected?upt:'—';
-  el('dashStatusFoot').textContent=s.isConnected?('● tertaut sebagai '+(s.botName||s.botNumber||'')):'● belum tertaut';
-  // bars
+  const upt=fmtUptime(s.uptime);
+  el('dashStatus').textContent='ONLINE';
+  el('dashPesan').textContent=msgsToday;
+  el('dashCmds').textContent=cmds;
+  el('statGroups').textContent=s.stats?.groupsCount||'0';
+  el('dashOwner').textContent=s.botNumber?('+'+s.botNumber):'belum di set';
+  el('dashUptime').textContent=upt;
+  const foot=el('dashStatusFoot');if(foot)foot.textContent='● tertaut sebagai '+(s.botName||s.botNumber||'');
   const bar=(id,w)=>{const b=el(id);if(b)b.style.width=w;};
-  bar('dashStatusBar',s.isConnected?'100%':'20%');
-  bar('dashPesanBar',s.isConnected?'72%':'20%');
-  bar('dashCmdsBar',s.isConnected?'54%':'20%');
-  bar('dashGroupsBar',s.stats?.groupsCount?'68%':'20%');
-  bar('dashUptimeBar',s.isConnected?'42%':'0%');
-  if(s.connection==='open'){setStatusPill(true,'Online · '+(s.botName||s.botNumber||'Terhubung'));}
-  else if(s.connection==='qr'||s.connection==='pairing_code'){setStatusPill(false,'Menunggu Pairing...');}
-  else{setStatusPill(false,'Offline — belum tertaut');}
+  bar('dashStatusBar','100%');bar('dashPesanBar','72%');bar('dashCmdsBar','54%');
+  bar('dashGroupsBar',s.stats?.groupsCount?'68%':'20%');bar('dashUptimeBar','42%');
+  setStatusPill(true,'Online · '+(s.botName||s.botNumber||'Terhubung'));
 }
 
 /* ========= API ========= */
@@ -1101,18 +1099,18 @@ function wizardStartPair(){
   if(num.length<10){err.textContent='⚠ Nomor terlalu pendek';err.style.display='block';return;}
   pairNumberVal=num;
   document.getElementById('step2num').textContent='+'+num;
+  const sn2=document.getElementById('step2num2');if(sn2)sn2.textContent='+'+num;
   pairingStarted=true;
   goStep(2);
   pairCode.textContent='––––––––';
-  showQROverlay('<span class="spinner"></span>','Meminta kode ke server...');
-  waitConnect.style.display='none';
+  pairCode.style.opacity='0.4';
+  waitConnect.style.display='inline-flex';waitMsg.textContent='Meminta kode ke server...';
   addLog('wr','Memulai pairing untuk nomor +'+num+'...');
   addW3('Meminta kode pairing untuk +'+num,'info');
 
   if(BACKEND){
     requestPairingReal(num);
   }else{
-    // DEMO mode
     demoBanner.style.display='block';
     setTimeout(()=>simStartPair(num),900);
   }
@@ -1138,15 +1136,13 @@ function refreshQR(){
 async function requestPairingReal(num){
   try{
     const r=await api('/api/pairing',{method:'POST',body:JSON.stringify({number:num})});
-    pairingCodeVal=r.code;pairCode.textContent=r.code;
-    waitConnect.style.display='inline-flex';waitMsg.textContent='Masukkan kode '+r.code+' di WA kamu...';
-    addLog('ok','Kode pairing siap: '+r.code);addW3('Kode siap! Masukkan di HP → Perangkat Tertaut → Tautkan pake nomor','ok');
-    drawQR('https://wa.me/pair/'+r.code.replace(/-/g,''));
-    // start polling connection state
+    pairingCodeVal=r.code;pairCode.textContent=r.code;pairCode.style.opacity='1';
+    waitConnect.style.display='inline-flex';waitMsg.textContent='Menunggu kamu masukkan kode di HP...';
+    addLog('ok','Kode pairing siap: '+r.code);addW3('Kode siap! Masukkan 8 huruf di atas ke WA → Perangkat Tertaut → Tautkan pake nomor','ok');
     startPollingConnection();
   }catch(e){
     addLog('er','Gagal minta kode: '+e.message);addW3('Gagal: '+e.message,'er');
-    showQROverlay('❌',e.message);
+    pairCode.style.opacity='1';pairCode.textContent='GAGAL';
     const err=document.getElementById('werr2');err.textContent='⚠ '+e.message;err.style.display='block';
   }
 }
@@ -1202,28 +1198,25 @@ async function wizardFinishOwner(){
 
 /* ========= SIMULASI / DEMO (kalo dibuka di Pages tanpa backend) ========= */
 function randCode(){const a='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';let s='';for(let i=0;i<8;i++)s+=a[Math.floor(Math.random()*a.length)];return s.match(/.{1,4}/g).join('-');}
-let i;
 function simStartPair(num){
   clearInterval(pairTimer);
   pairCode.textContent='––––––––';
-  // hapus tombol simNext sisa kalau ada
   document.querySelectorAll('.simNext').forEach(b=>b.remove());
   setTimeout(()=>{
-    const code=randCode();pairingCodeVal=code;pairCode.textContent=code;
-    drawQR('https://wa.me/pair/'+code.replace(/-/g,''));
-    waitConnect.style.display='inline-flex';waitMsg.textContent='(DEMO) Kode contoh — otomatis lanjut 7 detik lagi...';
+    const code=randCode();pairingCodeVal=code;pairCode.textContent=code;pairCode.style.opacity='1';
+    waitConnect.style.display='inline-flex';waitMsg.textContent='(DEMO) Kode contoh — menunggu kamu masukkan kode di HP...';
     addLog('ok','(DEMO) Kode contoh tampil: '+code);
-    addW3('(DEMO) Ini simulasi (bukan di server VPS). Otomatis lanjut ke langkah owner...','wr');
-    // AUTO lanjut setelah 7 detik (seolah user sudah masukin kode)
+    addW3('(DEMO) Ini cuma preview (GitHub Pages ga bisa jalanin Node/Baileys). Jalankan bot di VPS buat pairing BENERAN.','wr');
+    // DI DEMO: JANGAN auto-success. Biarkan user liat kode & pesan menunggu.
+    // (di server nyata, SSE 'connection:open' yang mentrigger onConnected)
     let sec=0;
     pairTimer=setInterval(()=>{
       sec++;
-      waitMsg.textContent='(DEMO) Simulasi koneksi... '+Math.max(0,7-sec)+'d';
-      if(sec>=7){
+      if(sec>=180){
         clearInterval(pairTimer);
-        addLog('ok','(DEMO) ✅ Simulasi pairing BERHASIL');
-        addW3('(DEMO) Kode diterima — simulasi sukses','ok');
-        onConnected({botNumber:pairNumberVal,user:{name:'Bot '+pairNumberVal.slice(-4)}});
+        waitMsg.textContent='(DEMO) Kode expired, klik "Minta Kode Baru"';
+        addLog('wr','(DEMO) Kode expired');addW3('Kode expired','wr');
+        pairCode.style.opacity='0.4';
       }
     },1000);
   },1200);
