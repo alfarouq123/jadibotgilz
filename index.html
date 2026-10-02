@@ -69,7 +69,9 @@ main{margin-top:62px;padding:26px 22px 70px;transition:padding-left .3s;max-widt
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:22px;}
 .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px;position:relative;overflow:hidden;transition:transform .2s, border-color .2s;}
 .card:hover{transform:translateY(-2px);border-color:var(--green3);}
-.card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(37,211,102,.07),transparent 50%);pointer-events:none;}
+.card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(37,211,102,.07),transparent 50%);pointer-events:none;z-index:0;}
+.card>*{position:relative;z-index:1;}
+button,a,[role=button],input,select,textarea,.sideLink,.switch{position:relative;z-index:2;}
 .card .label{font-size:11px;letter-spacing:1.3px;color:var(--muted);text-transform:uppercase;margin-bottom:10px;font-weight:700;}
 .card .val{font-size:28px;font-weight:800;line-height:1;}
 .card .val.g{color:var(--green);}
@@ -241,6 +243,47 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
 
 @media(min-width:1024px){main.sb-open{padding-left:300px;}}
 @media(max-width:520px){.pageTitle{font-size:22px;}.card .val{font-size:24px;}.hero h1{font-size:22px;}.hero .emojiBig{font-size:70px;}}
+
+/* ===== LOGIN ===== */
+.loginWall{position:fixed;inset:0;z-index:9999;background:radial-gradient(ellipse at top,#0d2c23 0%,#060d0b 70%);display:flex;align-items:center;justify-content:center;padding:20px;}
+.loginWall.hidden{display:none;}
+.loginBox{width:100%;max-width:420px;background:var(--card);border:1px solid var(--border);border-radius:24px;padding:36px 32px;box-shadow:0 30px 80px rgba(0,0,0,.5);position:relative;overflow:hidden;}
+.loginBox::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(37,211,102,.25),transparent 70%);pointer-events:none;}
+.loginBox h1{font-size:28px;font-weight:800;margin:0 0 6px;background:linear-gradient(135deg,#25d366,#34f5a1 60%,#ffd166);-webkit-background-clip:text;background-clip:text;color:transparent;position:relative;z-index:1;}
+.loginBox .lsub{color:var(--text2);font-size:13px;margin-bottom:22px;position:relative;z-index:1;}
+.loginBox label{display:block;font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.4px;margin:12px 0 6px;text-transform:uppercase;}
+.loginBox input{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-size:14px;outline:none;font-family:inherit;transition:border .2s;}
+.loginBox input:focus{border-color:var(--green);}
+.loginBox .btn-block{width:100%;justify-content:center;margin-top:18px;padding:13px;font-size:14px;}
+.googleBtn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#111;border:1px solid #ddd;border-radius:12px;padding:12px;font-weight:600;font-size:14px;cursor:pointer;font-family:inherit;margin-top:10px;transition:.15s;}
+.googleBtn:hover{background:#f1f3f4;transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,0,0,.2);}
+.googleBtn svg{width:20px;height:20px;}
+.dividerOr{display:flex;align-items:center;gap:12px;margin:18px 0 6px;color:var(--text2);font-size:12px;font-weight:600;}
+.dividerOr::before,.dividerOr::after{content:'';flex:1;height:1px;background:var(--border);}
+.loginErr{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5;border-radius:10px;padding:10px 12px;font-size:12px;margin-top:12px;display:none;}
+.roleBadge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;}
+.roleBadge.free{background:rgba(100,116,139,.15);color:#94a3b8;border:1px solid rgba(100,116,139,.3);}
+.roleBadge.pro{background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid rgba(251,191,36,.3);}
+.roleBadge.owner{background:linear-gradient(135deg,rgba(192,132,252,.2),rgba(147,51,234,.2));color:#c084fc;border:1px solid rgba(192,132,252,.4);}
+.avatar{position:relative;}
+.logoutLink{background:transparent;border:none;color:var(--text2);cursor:pointer;font-size:12px;font-family:inherit;padding:4px 8px;border-radius:8px;}
+.logoutLink:hover{background:var(--card);color:var(--danger);}
+/* BUY SC & FORM */
+.buyGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:14px;}
+.buyCard{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;position:relative;}
+.buyCard.hot{border-color:var(--gold);background:linear-gradient(180deg,rgba(255,209,102,.07),transparent);}
+.buyCard h3{font-size:19px;font-weight:800;margin:0;}
+.buyCard .price{font-size:30px;font-weight:800;color:var(--green);margin:10px 0;}
+.buyCard .price small{font-size:13px;color:var(--text2);font-weight:500;}
+.buyCard ul{list-style:none;padding:0;margin:10px 0 16px;font-size:13px;line-height:2;color:var(--text2);}
+.buyCard ul li::before{content:'✅ ';}
+.buyCard ul li.no::before{content:'❌ ';}
+.buyCard .tier{position:absolute;top:14px;right:14px;}
+.formBlock{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;margin-top:18px;}
+.formBlock label{display:block;font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.4px;margin:14px 0 6px;text-transform:uppercase;}
+.formBlock label:first-child{margin-top:0;}
+.formBlock input,.formBlock textarea{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:11px 14px;color:var(--text);font-size:14px;outline:none;font-family:inherit;box-sizing:border-box;}
+.formBlock textarea{min-height:100px;resize:vertical;}
 </style>
 </head>
 <body>
@@ -249,10 +292,35 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
   <button class="burger" id="burger"><span></span><span></span><span></span></button>
   <div class="logo"><span class="dot"></span><b>GilzzzBotzz</b></div>
   <div class="topRight">
+    <span id="userChip" class="userChip" style="display:none"><span id="userName">—</span> · <span id="userRole" class="roleBadge free">FREE</span></span>
+    <button class="logoutLink" id="logoutBtn" style="display:none" onclick="doLogoutApp()" title="Logout">🚪</button>
     <div class="pill" id="status"><span class="led"></span><span id="statusText">Offline</span></div>
-    <div class="avatar" title="Akun">G</div>
   </div>
 </div>
+<!-- LOGIN WALL -->
+<div class="loginWall" id="loginWall">
+  <div class="loginBox">
+    <div style="text-align:center;margin-bottom:8px"><div style="font-size:52px">🎨</div></div>
+    <h1 style="text-align:center">GilzzzBotzz</h1>
+    <div class="lsub" style="text-align:center">Masuk dulu untuk akses dashboard bot WhatsApp.</div>
+
+    <button class="googleBtn" onclick="googleLogin()">
+      <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.6 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.2 5.7l6.2 5.2C41 36.4 44 30.7 44 24c0-1.3-.1-2.3-.4-3.5z"/></svg>
+      Masuk dengan Google
+    </button>
+
+    <div class="dividerOr">ATAU</div>
+
+    <label>Nama Lengkap</label>
+    <input type="text" id="liName" placeholder="Masukin nama kamu">
+    <label>Email</label>
+    <input type="email" id="liEmail" placeholder="email@contoh.com">
+    <button class="btn btn-block green" onclick="emailLogin()">🚀 Masuk</button>
+    <div class="loginErr" id="loginErr"></div>
+    <div style="text-align:center;font-size:11px;color:var(--text2);margin-top:16px;line-height:1.6">Dengan masuk kamu setuju dengan syarat & ketentuan GilzzzBotzz.<br>Role default: <span class="roleBadge free" style="display:inline-flex">FREE</span></div>
+  </div>
+</div>
+
 <div class="backdrop" id="backdrop"></div>
 <aside class="sidebar" id="sidebar">
   <div class="sideH">Utama</div>
@@ -268,6 +336,8 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
   <div class="sideH">Lainnya</div>
   <div class="sideLink" data-view="logs"><span class="ic">📜</span> Log Aktivitas</div>
   <div class="sideLink" data-view="premium"><span class="ic">💎</span> Premium</div>
+  <div class="sideLink" data-view="buysc"><span class="ic">🛒</span> Beli SC</div>
+  <div class="sideLink" data-view="ownerreq"><span class="ic">👑</span> Jadi Owner</div>
   <div class="sideLink" data-view="tutorial"><span class="ic">📘</span> Panduan Install</div>
   <div class="sideLink" data-view="contact"><span class="ic">📞</span> Hubungi Gilz</div>
   <div class="sideFoot"><b>🎨 GilzzzBotzz v2.5</b>by Gilz · build stabil.<br>NodeJS + Baileys MD.</div>
@@ -562,6 +632,119 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
   </div></div>
 </section>
 
+<!-- BUY SC -->
+<section class="view hidden" id="view-buysc">
+  <div class="pageTitle"><span class="emoji">🛒</span> Beli Source Code (SC)</div>
+  <div class="sub">Dapetin full source code bot GilzzzBotzz untuk dipakai sendiri / di-rewrite.</div>
+
+  <div class="buyGrid">
+    <div class="buyCard">
+      <span class="tier roleBadge free">FREE</span>
+      <h3>Free Tier</h3>
+      <div class="price">Rp0 <small>/gratis</small></div>
+      <ul>
+        <li>Akses dashboard web ini</li>
+        <li>Bisa pair 1 nomor bot (hosting sendiri)</li>
+        <li>40+ command dasar</li>
+        <li class="no">Tidak dapat source code</li>
+        <li class="no">Tidak bisa di-rewrite/jual ulang</li>
+        <li>Support komunitas</li>
+      </ul>
+      <button class="btn outline btn-block" disabled>Kamu pakai ini sekarang</button>
+    </div>
+
+    <div class="buyCard hot">
+      <span class="tier roleBadge pro">PRO</span>
+      <h3>SC Full Premium</h3>
+      <div class="price">Rp75rb <small>/sekali bayar</small></div>
+      <ul>
+        <li>Full source code (semua plugin + dashboard)</li>
+        <li>Dapat update selamanya</li>
+        <li>Bisa di kostumisasi sesuka hati</li>
+        <li>50+ plugin premium (AI, game, store, dll)</li>
+        <li class="no">Tidak boleh jual ulang dengan nama sendiri</li>
+        <li>Garansi install 1x</li>
+      </ul>
+      <button class="btn gold btn-block" onclick="openBuyForm('sc-premium','SC Full Premium — Rp75rb')">💳 Beli Sekarang</button>
+    </div>
+
+    <div class="buyCard">
+      <span class="tier roleBadge owner">RESELLER</span>
+      <h3>SC Reseller</h3>
+      <div class="price">Rp250rb <small>/sekali bayar</small></div>
+      <ul>
+        <li>Full source code PRO</li>
+        <li>Boleh ganti nama / claim sebagai buatanmu</li>
+        <li>Boleh jual ulang unlimited</li>
+        <li>Bonus 10 template sticker pack</li>
+        <li>Support prioritas WA</li>
+        <li>Bisa request custom plugin</li>
+      </ul>
+      <button class="btn purple btn-block" onclick="openBuyForm('sc-reseller','SC Reseller — Rp250rb')">👑 Beli Reseller</button>
+    </div>
+  </div>
+
+  <div class="formBlock" id="buyFormBlock" style="display:none">
+    <h2 style="margin:0 0 4px" id="buyFormTitle">Form Pembelian</h2>
+    <p class="sub" style="margin-bottom:0">Isi data di bawah, nanti admin bakal WA kamu untuk proses pembayaran & pengiriman file.</p>
+    <label>Nama Lengkap</label>
+    <input type="text" id="bfName" placeholder="Nama kamu">
+    <label>Nomor WhatsApp</label>
+    <input type="tel" id="bfNum" placeholder="contoh: 6281990767636">
+    <label>Catatan tambahan (opsional)</label>
+    <textarea id="bfNote" placeholder="Cth: mau dibantu installin sekalian, dll."></textarea>
+    <div class="row">
+      <button class="btn green" onclick="submitBuy()">✅ Kirim Permintaan</button>
+      <button class="btn outline" onclick="document.getElementById('buyFormBlock').style.display='none'">Batal</button>
+    </div>
+  </div>
+</section>
+
+<!-- JADI OWNER -->
+<section class="view hidden" id="view-ownerreq">
+  <div class="pageTitle"><span class="emoji">👑</span> Mau Jadi Owner?</div>
+  <div class="sub">Owner adalah pengguna yang bisa kontrol penuh bot (restart, broadcast, eval, dll).</div>
+
+  <div class="panel">
+    <h2>Apa itu Owner?</h2>
+    <p class="desc" style="color:var(--text2);font-size:13px;line-height:1.8">
+      <b>Owner</b> adalah orang yang punya akses penuh ke bot. Bedanya dengan FREE/PRO user:
+    </p>
+    <ul style="color:var(--text2);font-size:13px;line-height:2">
+      <li>✅ Bisa jalanin <code style="color:var(--green);background:var(--card2);padding:2px 6px;border-radius:4px">.restart</code>, <code style="color:var(--green);background:var(--card2);padding:2px 6px;border-radius:4px">.broadcast</code>, command admin</li>
+      <li>✅ Bisa tambah/hapus premium user</li>
+      <li>✅ Akses eval & terminal (remote eksekusi kode dari WA)</li>
+      <li>✅ Support prioritas langsung dari Gilz</li>
+    </ul>
+    <div style="margin-top:14px;padding:14px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:12px;font-size:13px;color:#fde68a">
+      💡 <b>Cara jadi Owner:</b> Isi form di bawah → admin WA kamu → proses verifikasi → nomormu ditambahkan ke daftar owner. <b>GRATIS</b> untuk yang sudah beli SC Reseller.
+    </div>
+  </div>
+
+  <div class="formBlock">
+    <h2 style="margin:0 0 4px">Form Pengajuan Owner</h2>
+    <p class="sub" style="margin-bottom:0">Isi selengkap-lengkapnya. Admin merespon 1x24 jam.</p>
+    <label>Nama Lengkap *</label>
+    <input type="text" id="orName" placeholder="Nama kamu">
+    <label>Nomor WhatsApp yang mau dijadikan Owner *</label>
+    <input type="tel" id="orNum" placeholder="contoh: 6281990767636">
+    <label>Alasan mau jadi Owner *</label>
+    <textarea id="orReason" placeholder="Contoh: Saya punya SC Reseller, mau coba deploy untuk grup saya..."></textarea>
+    <label>Paket yang dipakai</label>
+    <select id="orPaket" style="width:100%;background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:11px 14px;color:var(--text);font-size:14px;font-family:inherit">
+      <option value="free">FREE (ingin coba)</option>
+      <option value="pro">PRO (sudah beli SC Premium)</option>
+      <option value="reseller">RESELLER (sudah beli SC Reseller)</option>
+    </select>
+    <label>Bukti pembayaran (opsional — upload link gambar)</label>
+    <input type="text" id="orBukti" placeholder="Link screenshot bukti transfer (opsional)">
+    <div class="row">
+      <button class="btn green" onclick="submitOwnerReq()">📨 Kirim Pengajuan</button>
+      <a class="btn outline" href="https://wa.me/6281990767636?text=Halo+Gilz%2C+saya+mau+jadi+owner+bot" target="_blank">💬 Langsung WA Admin</a>
+    </div>
+  </div>
+</section>
+
 <!-- TUTORIAL -->
 <section class="view hidden" id="view-tutorial">
   <div class="pageTitle"><span class="emoji">📘</span> Panduan Install</div>
@@ -601,6 +784,99 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+/* ========= AUTH ========= */
+const GOOGLE_CLIENT_ID='156494960890-uss9j8vrahu9gv6jd4dle8aj711fh016.apps.googleusercontent.com';
+let currentUser=null;
+function showLoginErr(msg){const e=document.getElementById('loginErr');if(!e)return;e.textContent=msg;e.style.display='block';clearTimeout(window._leT);window._leT=setTimeout(()=>e.style.display='none',4000);}
+function applyUser(u){
+  currentUser=u;
+  try{localStorage.setItem('gilz_user',JSON.stringify(u));}catch{}
+  document.getElementById('loginWall').classList.add('hidden');
+  document.getElementById('userChip').style.display='inline-flex';
+  document.getElementById('logoutBtn').style.display='inline-block';
+  document.getElementById('userName').textContent=u.name||'User';
+  const rb=document.getElementById('userRole');
+  rb.textContent=(u.role||'FREE').toUpperCase();
+  rb.className='roleBadge '+(u.role||'free');
+  toast('Selamat datang, '+(u.name||'User')+'! 🎉','ok');
+}
+function doLogoutApp(){
+  if(!confirm('Yakin mau keluar?'))return;
+  try{localStorage.removeItem('gilz_user');}catch{}
+  currentUser=null;
+  document.getElementById('loginWall').classList.remove('hidden');
+  document.getElementById('userChip').style.display='none';
+  document.getElementById('logoutBtn').style.display='none';
+  toast('Sampai jumpa! 👋','wr');
+}
+function emailLogin(){
+  const name=document.getElementById('liName').value.trim();
+  const email=document.getElementById('liEmail').value.trim();
+  if(!name){showLoginErr('Nama jangan kosong');return;}
+  if(!email||!/\S+@\S+\.\S+/.test(email)){showLoginErr('Format email salah');return;}
+  applyUser({name,email,role:'free',provider:'email',loginAt:Date.now()});
+}
+function googleLogin(){
+  if(!window.google||!google.accounts){showLoginErr('Google SDK belum siap, klik lagi sebentar...');return;}
+  try{
+    google.accounts.oauth2.initTokenClient({
+      client_id:GOOGLE_CLIENT_ID,
+      scope:'openid email profile',
+      callback:async (resp)=>{
+        if(resp.error){showLoginErr('Google login gagal');return;}
+        try{
+          const r=await fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{Authorization:'Bearer '+resp.access_token}});
+          const d=await r.json();
+          applyUser({name:d.name||d.given_name||'Google User',email:d.email,role:'free',provider:'google',loginAt:Date.now()});
+        }catch(e){showLoginErr('Gagal ambil profil Google');}
+      },
+    }).requestAccessToken();
+  }catch(e){showLoginErr('Google login error: '+e.message);}
+}
+function requireLogin(){
+  const saved=localStorage.getItem('gilz_user');
+  if(saved){try{const u=JSON.parse(saved);applyUser(u);return true;}catch(e){}}
+  document.getElementById('loginWall').classList.remove('hidden');
+  return false;
+}
+/* ========= BUY SC ========= */
+let _curBuy=null;
+function openBuyForm(id,label){
+  if(!currentUser){toast('Login dulu cok','err');return;}
+  _curBuy={id,label};
+  document.getElementById('buyFormTitle').textContent='🛒 '+label;
+  document.getElementById('buyFormBlock').style.display='block';
+  if(document.getElementById('bfName'))document.getElementById('bfName').value=currentUser.name||'';
+  document.getElementById('buyFormBlock').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function submitBuy(){
+  const name=document.getElementById('bfName').value.trim();
+  const num=document.getElementById('bfNum').value.replace(/\D/g,'');
+  if(!name){toast('Isi nama dulu','err');return;}
+  if(!num.startsWith('62')||num.length<10){toast('Nomor WA formatnya 62xxx','err');return;}
+  const note=document.getElementById('bfNote').value.trim();
+  const msg=encodeURIComponent('Halo Gilz, saya mau beli *'+_curBuy.label+'*\n\nNama: '+name+'\nNomor WA: +'+num+'\n'+(note?'Catatan: '+note+'\n':'')+'\nMohon info pembayaran 🙏');
+  try{const o=JSON.parse(localStorage.getItem('gilz_orders')||'[]');o.push({item:_curBuy.id,label:_curBuy.label,name,num,note,t:Date.now()});localStorage.setItem('gilz_orders',JSON.stringify(o));}catch{}
+  document.getElementById('buyFormBlock').style.display='none';
+  toast('Mengarahkan ke WA admin...','ok');
+  setTimeout(()=>window.open('https://wa.me/6281990767636?text='+msg,'_blank'),600);
+}
+function submitOwnerReq(){
+  const name=document.getElementById('orName').value.trim();
+  const num=document.getElementById('orNum').value.replace(/\D/g,'');
+  const reason=document.getElementById('orReason').value.trim();
+  const paket=document.getElementById('orPaket').value;
+  if(!name||!num||!reason){toast('Isi semua field bertanda *','err');return;}
+  if(!num.startsWith('62')||num.length<10){toast('Nomor WA formatnya 62xxx','err');return;}
+  const bukti=document.getElementById('orBukti').value.trim();
+  const msg=encodeURIComponent('Halo Gilz, saya mau *daftar jadi Owner bot*\n\nNama: '+name+'\nNomor WA: +'+num+'\nPaket: '+paket.toUpperCase()+'\nAlasan: '+reason+'\n'+(bukti?'Bukti: '+bukti+'\n':'')+'\nMohon ditindaklanjuti 🙏');
+  try{const r=JSON.parse(localStorage.getItem('gilz_ownerreq')||'[]');r.push({name,num,reason,paket,bukti,t:Date.now()});localStorage.setItem('gilz_ownerreq',JSON.stringify(r));}catch{}
+  toast('Mengarahkan ke WA admin...','ok');
+  setTimeout(()=>window.open('https://wa.me/6281990767636?text='+msg,'_blank'),600);
+}
+</script>
 <script>
 /* =======================================================
    GilzzzBotzz Dashboard - v3 REAL API
@@ -620,13 +896,19 @@ burger.onclick=()=>{burger.classList.toggle('open');sidebar.classList.toggle('op
 backdrop.onclick=()=>{burger.classList.remove('open');sidebar.classList.remove('open');backdrop.classList.remove('open');};
 document.querySelectorAll('.sideLink').forEach(l=>l.onclick=()=>go(l.dataset.view));
 function go(v){
+  if(!currentUser){requireLogin();return;}
   document.querySelectorAll('.view').forEach(x=>x.classList.add('hidden'));
-  document.getElementById('view-'+v).classList.remove('hidden');
+  const el=document.getElementById('view-'+v);
+  if(el)el.classList.remove('hidden');
   document.querySelectorAll('.sideLink').forEach(x=>x.classList.toggle('active',x.dataset.view===v));
   if(window.innerWidth<1024){burger.classList.remove('open');sidebar.classList.remove('open');backdrop.classList.remove('open');}
   document.querySelector('main').classList.toggle('sb-open',sidebar.classList.contains('open')&&window.innerWidth>=1024);
   window.scrollTo({top:0,behavior:'smooth'});
 }
+// ENTER key di form login
+document.addEventListener('DOMContentLoaded',()=>{
+  ['liName','liEmail'].forEach(id=>{const i=document.getElementById(id);if(i)i.addEventListener('keydown',e=>{if(e.key==='Enter')emailLogin();});});
+});
 window.addEventListener('resize',()=>document.querySelector('main').classList.toggle('sb-open',sidebar.classList.contains('open')&&window.innerWidth>=1024));
 
 /* ========= TOAST ========= */
@@ -1029,6 +1311,8 @@ function drawChart(){const cv=document.getElementById('chart');if(!cv)return;con
 
 /* ========= BOOT ========= */
 async function boot(){
+  // Awal: cek login dulu
+  const logged=requireLogin();
   // Awal: OFFLINE sampai beneran connected
   setStatusPill(false,'Belum tertaut');
   document.getElementById('dashStatus').textContent='OFFLINE';
