@@ -181,6 +181,36 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card);border:1px solid var(--green);color:var(--text);padding:12px 20px;border-radius:14px;font-size:13px;font-weight:500;z-index:200;opacity:0;pointer-events:none;transition:.3s;box-shadow:0 10px 40px rgba(0,0,0,.4);}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 .toast.err{border-color:var(--danger);}
+.toast.wr{border-color:var(--gold);}
+
+/* WIZARD */
+.wizard{max-width:780px;margin:0 auto;}
+.steps-bar{display:flex;align-items:center;gap:8px;margin-bottom:22px;}
+.step-dot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;background:var(--card2);color:var(--text2);border:2px solid var(--border);flex-shrink:0;}
+.step-dot.done{background:var(--green);border-color:var(--green);color:#fff;}
+.step-dot.active{background:transparent;border-color:var(--green);color:var(--green);box-shadow:0 0 0 4px rgba(37,211,102,.12);}
+.step-line{flex:1;height:2px;background:var(--border);border-radius:2px;}
+.step-line.done{background:var(--green);}
+.step-title{font-size:11px;font-weight:600;color:var(--text2);letter-spacing:.3px;text-transform:uppercase;}
+.step-title b{display:block;font-size:16px;font-weight:800;color:var(--text);text-transform:none;letter-spacing:0;margin-top:2px;}
+.wiz-panel{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:32px;text-align:center;}
+.wiz-panel h2{font-size:22px;font-weight:800;margin:0 0 6px;}
+.wiz-panel p.sub2{color:var(--text2);font-size:14px;margin:0 0 22px;}
+.big-code{font-family:'Courier New',monospace;font-size:42px;font-weight:800;letter-spacing:6px;color:var(--green);background:var(--card2);border:2px dashed rgba(37,211,102,.4);border-radius:16px;padding:22px 16px;margin:20px 0;word-break:break-all;}
+.qr-big{background:#fff;border-radius:18px;padding:18px;display:inline-block;position:relative;margin:14px auto;}
+.qr-big canvas{display:block;}
+.qr-big .qrOverlay{position:absolute;inset:0;background:rgba(7,94,84,.92);border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;gap:10px;font-weight:600;}
+.spinner{width:38px;height:38px;border:3px solid rgba(255,255,255,.25);border-top-color:#25d366;border-radius:50%;animation:spin .9s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.instructions{text-align:left;background:var(--card2);border-radius:14px;padding:16px 18px;margin-top:18px;font-size:13px;color:var(--text2);line-height:1.7;}
+.instructions b{color:var(--text);}
+.instructions ol{margin:6px 0 0;padding-left:20px;}
+.connecting-pill{display:inline-flex;align-items:center;gap:10px;padding:10px 18px;background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.3);border-radius:999px;color:var(--green);font-weight:600;font-size:13px;margin-top:14px;}
+.connecting-pill .spinner{width:16px;height:16px;border-width:2px;border-color:rgba(37,211,102,.25);border-top-color:var(--green);}
+.error-box{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5;border-radius:12px;padding:12px 16px;margin-top:14px;font-size:13px;}
+.success-box{background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);color:#86efac;border-radius:12px;padding:16px;margin-top:14px;font-size:14px;}
+.mode-demo-banner{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:#fde68a;border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:13px;text-align:left;}
+
 
 /* CHART */
 .chart{width:100%;height:180px;margin-top:10px;}
@@ -262,12 +292,12 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
   <div class="title" style="font-size:20px">Ringkasan</div>
   <div class="sub">Statistik bot kamu secara real-time.</div>
   <div class="grid">
-    <div class="card"><div class="label">Status</div><div class="val g" id="dashStatus">ONLINE</div><div class="foot">● perangkat tertaut</div><div class="mini"><i style="width:100%"></i></div><div class="ic-bg">🟢</div></div>
-    <div class="card"><div class="label">Pesan Hari Ini</div><div class="val b" id="dashPesan">1,284</div><div class="foot">📈 +18% dari kemarin</div><div class="mini"><i style="width:72%"></i></div><div class="ic-bg">💬</div></div>
-    <div class="card"><div class="label">Command Dipakai</div><div class="val">342</div><div class="foot">⚡ command terbanyak: .play</div><div class="mini"><i style="width:54%"></i></div><div class="ic-bg">⚡</div></div>
-    <div class="card"><div class="label">Grup Terdaftar</div><div class="val p">47</div><div class="foot">👥 32 grup aktif hari ini</div><div class="mini"><i style="width:68%"></i></div><div class="ic-bg">👥</div></div>
-    <div class="card"><div class="label">Owner</div><div class="val go" id="dashOwner">+62 8199-0767-636</div><div class="foot">👑 Gilz</div><div class="ic-bg">👑</div></div>
-    <div class="card"><div class="label">Uptime</div><div class="val">3j 24m</div><div class="foot">⏱ sejak terakhir restart</div><div class="mini"><i style="width:42%"></i></div><div class="ic-bg">⏱</div></div>
+    <div class="card"><div class="label">Status</div><div class="val g" id="dashStatus">OFFLINE</div><div class="foot" id="dashStatusFoot">● belum tertaut</div><div class="mini"><i id="dashStatusBar" style="width:20%"></i></div><div class="ic-bg">🔴</div></div>
+    <div class="card"><div class="label">Pesan Hari Ini</div><div class="val b" id="dashPesan">—</div><div class="foot">📈 statistik real-time</div><div class="mini"><i id="dashPesanBar" style="width:20%"></i></div><div class="ic-bg">💬</div></div>
+    <div class="card"><div class="label">Command Dipakai</div><div class="val" id="dashCmds">—</div><div class="foot">⚡ update real-time</div><div class="mini"><i id="dashCmdsBar" style="width:20%"></i></div><div class="ic-bg">⚡</div></div>
+    <div class="card"><div class="label">Grup Terdaftar</div><div class="val p" id="statGroups">—</div><div class="foot">👥 terdeteksi otomatis</div><div class="mini"><i id="dashGroupsBar" style="width:20%"></i></div><div class="ic-bg">👥</div></div>
+    <div class="card"><div class="label">Owner</div><div class="val go" id="dashOwner">belum di set</div><div class="foot">👑 daftarkan setelah pair</div><div class="ic-bg">👑</div></div>
+    <div class="card"><div class="label">Uptime</div><div class="val" id="dashUptime">—</div><div class="foot">⏱ sejak terakhir online</div><div class="mini"><i id="dashUptimeBar" style="width:0%"></i></div><div class="ic-bg">⏱</div></div>
   </div>
 
   <div style="display:grid;grid-template-columns:1fr;gap:18px;">
@@ -289,44 +319,104 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
   </div>
 </section>
 
-<!-- PAIR -->
+<!-- PAIR WIZARD 4 STEPS -->
 <section class="view hidden" id="view-pair">
   <div class="pageTitle"><span class="emoji">📱</span> Tautkan Perangkat</div>
-  <div class="sub">Hubungkan WhatsApp kamu — scan QR atau masukin kode pairing.</div>
-  <div class="panel">
-    <div class="pairBox">
-      <div class="qr" id="qrBox">
-        <canvas id="qrCanvas"></canvas>
-        <div class="qrOverlay" id="qrOverlay"><div style="font-size:40px">🔗</div><div id="qrMsg">Menyiapkan kode...</div></div>
+  <div class="sub">Ikuti langkah demi langkah sampai bot online.</div>
+  <div id="demoBanner" class="mode-demo-banner" style="display:none">⚠ <b>MODE PREVIEW</b> — Kamu buka ini dari GitHub Pages (static). Kode pairing & QR di bawah cuma simulasi. Untuk pairing beneran, jalankan bot di VPS trus buka <code style="color:#fde68a">http://IP-VPS:3000</code>.</div>
+  <div class="wizard">
+    <!-- Stepper -->
+    <div class="steps-bar" id="stepper">
+      <div class="step-dot active" data-n="1">1</div><div class="step-line"></div>
+      <div class="step-dot" data-n="2">2</div><div class="step-line"></div>
+      <div class="step-dot" data-n="3">3</div><div class="step-line"></div>
+      <div class="step-dot" data-n="4">4</div>
+    </div>
+    <div class="step-title" id="stepLabel"><b>Langkah 1</b>Masukkan nomor WhatsApp yang mau dijadikan bot</div>
+
+    <!-- STEP 1: NOMOR -->
+    <div class="wiz-panel" id="wstep1">
+      <div style="font-size:52px">📱</div>
+      <h2>Nomor WhatsApp Bot</h2>
+      <p class="sub2">Masukkan nomor HP yang akan dijadikan bot. <b>Pastikan nomor ini aktif dan bisa menerima WhatsApp.</b></p>
+      <div style="max-width:380px;margin:0 auto;text-align:left">
+        <label>Nomor WhatsApp (format 62xxx)</label>
+        <input id="pairNumber" type="tel" placeholder="contoh: 6281990767636" inputmode="numeric" style="text-align:center;font-size:18px;letter-spacing:1px;font-weight:600">
+        <div style="font-size:12px;color:var(--text2);margin-top:6px">Gunakan kode negara <b>62</b>, jangan pakai 0 di depan. Contoh benar: <code style="color:var(--green)">6281990767636</code></div>
       </div>
-      <div>
-        <h3 style="margin-bottom:12px">Cara Hubungkan</h3>
-        <div class="steps">
-          <div class="step"><div class="num">1</div><div class="body"><b>Buka WhatsApp di HP</b><span>Android / iPhone sama-sama bisa.</span></div></div>
-          <div class="step"><div class="num">2</div><div class="body"><b>Masuk menu Perangkat Tertaut</b><span>Tap ⋮ (atas kanan) → Perangkat tertaut → Tautkan perangkat.</span></div></div>
-          <div class="step"><div class="num">3</div><div class="body"><b>Pilih "Tautkan dengan nomor telepon"</b><span>Masukkan kode delapan huruf di bawah ini ATAU scan QR di samping.</span></div></div>
-        </div>
-        <div class="codeBox" id="codeBox" style="margin-top:18px">
-          <div class="tiny">Nomor WhatsApp (untuk pairing code)</div>
-          <div class="row" style="gap:8px;margin:8px 0 14px">
-            <input id="pairNumber" type="tel" placeholder="contoh: 6281990767636" style="flex:1;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-family:inherit;font-size:14px">
-            <button class="btn green" onclick="requestPairing()" style="white-space:nowrap">📲 Minta Kode</button>
+      <div style="margin-top:22px"><button class="btn green" style="padding:14px 34px;font-size:15px" onclick="wizardStartPair()">🚀 Mulai Tautkan Perangkat</button></div>
+      <div id="werr1" class="error-box" style="display:none"></div>
+    </div>
+
+    <!-- STEP 2: QR + PAIRING CODE -->
+    <div class="wiz-panel" id="wstep2" style="display:none">
+      <div style="font-size:48px">🔗</div>
+      <h2>Scan QR / Masukkan Kode</h2>
+      <p class="sub2">Pilih salah satu cara dari HP kamu yang nomornya <b id="step2num"></b>.</p>
+      <div style="display:grid;grid-template-columns:1fr;gap:22px;align-items:start;" id="qrGrid">
+        <div style="text-align:center">
+          <div class="qr-big">
+            <canvas id="qrCanvas"></canvas>
+            <div class="qrOverlay" id="qrOverlay"><div class="spinner"></div><div id="qrMsg">Meminta QR dari server...</div></div>
           </div>
-          <div class="tiny">Kode Pairing (8 huruf) — masukkan di WA → Perangkat Tertaut → Tautkan pake nomor</div>
-          <div class="code" id="pairCode">––––––––</div>
-          <div class="hint">kode otomatis baru tiap 60 detik · pastikan internet stabil</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:6px">Scan pake WhatsApp → Perangkat Tertaut</div>
         </div>
-        <div class="row">
-          <button class="btn" onclick="refreshQR()">🔄 Refresh QR</button>
-          <button class="btn outline" onclick="doLogout()">🔌 Logout</button>
-          <button class="btn purple" onclick="toast('kode disalin!','ok');navigator.clipboard&&navigator.clipboard.writeText(document.getElementById('pairCode').textContent)">📋 Salin Kode</button>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:8px">ATAU — pakai kode pairing:</div>
+          <div class="big-code" id="pairCode">––––––––</div>
+          <div class="row" style="justify-content:center;gap:8px">
+            <button class="btn sm" onclick="refreshQR()">🔄 Refresh</button>
+            <button class="btn sm purple" onclick="copyCode()">📋 Salin</button>
+          </div>
+          <div class="instructions">
+            <b>📝 Langkah di HP:</b>
+            <ol>
+              <li>Buka <b>WhatsApp</b> di nomor yang mau dijadikan bot</li>
+              <li>Tap <b>⋮ / ⚙️</b> → <b>Perangkat Tertaut</b> (Linked Devices)</li>
+              <li>Tap <b>"Tautkan Perangkat"</b> (Link a Device)</li>
+              <li>Pilih <b>"Tautkan dengan nomor telepon saja"</b> (Link with phone number)</li>
+              <li>Masukkan 8 huruf kode di atas, <b>ATAU</b> scan QR di samping</li>
+            </ol>
+          </div>
         </div>
+      </div>
+      <div id="waitConnect" class="connecting-pill" style="display:none"><span class="spinner"></span><span id="waitMsg">Menunggu kamu scan / masukkan kode di HP...</span></div>
+      <div id="werr2" class="error-box" style="display:none"></div>
+      <div class="row" style="justify-content:center;margin-top:22px">
+        <button class="btn outline" onclick="wizardBack(1)">← Kembali</button>
+        <button class="btn danger" onclick="cancelWizard()">❌ Batal</button>
       </div>
     </div>
+
+    <!-- STEP 3: WAITING / CONNECTING -->
+    <div class="wiz-panel" id="wstep3" style="display:none">
+      <div style="font-size:60px"><span class="spinner" style="width:60px;height:60px;border-width:4px;border-color:rgba(37,211,102,.2);border-top-color:var(--green);display:inline-block"></span></div>
+      <h2>Menghubungkan ke WhatsApp...</h2>
+      <p class="sub2" id="w3sub">Lagi sinkronisasi akun kamu, jangan tutup halaman ini.</p>
+      <div class="connecting-pill"><span class="spinner"></span><span>Connecting...</span></div>
+      <div id="w3log" style="text-align:left;background:var(--card2);border-radius:12px;padding:14px;margin-top:18px;max-height:140px;overflow-y:auto;font-family:monospace;font-size:12px;color:var(--text2);line-height:1.8"></div>
+    </div>
+
+    <!-- STEP 4: CONNECTED! set owner -->
+    <div class="wiz-panel" id="wstep4" style="display:none">
+      <div style="font-size:60px">✅</div>
+      <h2 style="color:var(--green)">Berhasil Terhubung!</h2>
+      <p class="sub2">Akun <b id="w4num"></b> sudah menjadi bot. Sekarang daftarkan nama owner.</p>
+      <div style="max-width:380px;margin:18px auto 0;text-align:left">
+        <label>Nama Owner (yang punya kontrol bot)</label>
+        <input id="wOwnerName" type="text" placeholder="contoh: Gilz">
+        <label style="margin-top:14px">Nomor Owner (format 62xxx)</label>
+        <input id="wOwnerNum" type="tel" placeholder="contoh: 6281990767636" inputmode="numeric" value="6281990767636">
+        <div style="font-size:12px;color:var(--text2);margin-top:6px">Nomor inilah yang bisa pakai command owner (restart, broadcast, eval, dll).</div>
+      </div>
+      <div style="margin-top:22px"><button class="btn green" style="padding:14px 34px;font-size:15px" onclick="wizardFinishOwner()">🎉 Selesai! Masuk Dashboard</button></div>
+      <div id="werr4" class="error-box" style="display:none"></div>
+    </div>
   </div>
-  <div class="panel">
+
+  <div class="panel" style="margin-top:20px">
     <h2>Log Koneksi</h2>
-    <div class="log" id="pairLog"><div><span class="ts">[siap]</span> menunggu inisiasi...</div></div>
+    <div class="log" id="pairLog"><div><span class="ts">[siap]</span> siap. klik menu "Mulai Tautkan Perangkat" untuk mulai.</div></div>
   </div>
 </section>
 
@@ -335,7 +425,7 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
   <div class="pageTitle"><span class="emoji">👑</span> Owner Bot</div>
   <div class="sub">Nomor yang punya kontrol penuh atas bot (semua command admin).</div>
   <div class="panel">
-    <form class="ownerForm" id="ownerForm" onsubmit="saveOwner(event)" style="max-width:460px">
+    <form class="ownerForm" id="ownerForm" onsubmit="saveOwnerForm(event)" style="max-width:460px">
       <label>Nomor WhatsApp Owner (format 62xxx)</label>
       <input type="tel" id="ownerNum" placeholder="contoh: 6281990767636" required>
       <div style="font-size:12px;color:var(--text2);margin-top:6px">Default pemilik: <b style="color:var(--gold)">081990767636 (Gilz)</b></div>
@@ -542,41 +632,59 @@ window.addEventListener('resize',()=>document.querySelector('main').classList.to
 /* ========= TOAST ========= */
 function toast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(type==='err'?'err':type==='wr'?'wr':'');setTimeout(()=>t.className='toast',2800);}
 
-/* ========= PAIRING DOM ========= */
+/* ========= STATE ========= */
+const API_BASE='';
+let BACKEND=false;
+let es=null;
+let wizardStep=1;
+let pairTimer=null;
+let pairNumberVal='';
+let pairingCodeVal='';
+let pairingStarted=false;
+
+/* ========= DOM refs ========= */
 const pairCode=document.getElementById('pairCode'),pairLog=document.getElementById('pairLog'),
       qrCanvas=document.getElementById('qrCanvas'),qrOverlay=document.getElementById('qrOverlay'),qrMsg=document.getElementById('qrMsg'),
-      pairNumber=document.getElementById('pairNumber');
+      pairNumber=document.getElementById('pairNumber'),
+      wstep1=document.getElementById('wstep1'),wstep2=document.getElementById('wstep2'),wstep3=document.getElementById('wstep3'),wstep4=document.getElementById('wstep4'),
+      stepLabel=document.getElementById('stepLabel'),stepper=document.getElementById('stepper'),
+      waitConnect=document.getElementById('waitConnect'),waitMsg=document.getElementById('waitMsg'),
+      demoBanner=document.getElementById('demoBanner'),w3log=document.getElementById('w3log');
 
+/* ========= LOGS ========= */
+function nowTS(){const t=new Date();return String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0')+':'+String(t.getSeconds()).padStart(2,'0');}
 function addLog(cls,msg){
-  if(!pairLog)return;
-  const t=new Date();const ts=String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0')+':'+String(t.getSeconds()).padStart(2,'0');
-  const c=cls==='ok'?'ok':cls==='wr'?'wr':'er';
-  pairLog.innerHTML+=`<div><span class="ts">[${ts}]</span> <span class="${c}">●</span> ${msg}</div>`;
+  if(!pairLog)return;const c=cls==='ok'?'ok':cls==='wr'?'wr':'er';
+  pairLog.innerHTML+=`<div><span class="ts">[${nowTS()}]</span> <span class="${c}">●</span> ${msg}</div>`;
   pairLog.scrollTop=pairLog.scrollHeight;
+}
+function addW3(msg,cls='info'){
+  if(!w3log)return;
+  const col=cls==='ok'?'#86efac':cls==='wr'?'#fde68a':cls==='er'?'#fca5a5':'#94a3b8';
+  w3log.innerHTML+=`<div style="color:${col}">[${nowTS()}] ${msg}</div>`;
+  w3log.scrollTop=w3log.scrollHeight;
 }
 function addL(type,txt){
   const b=document.getElementById('logBox');if(!b)return;
-  const t=new Date();const ts=String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0')+':'+String(t.getSeconds()).padStart(2,'0');
   const c=type==='ok'?'ok':type==='wr'?'wr':'er';
-  b.innerHTML+=`<div><span class="ts">[${ts}]</span> <span class="${c}">●</span> ${txt}</div>`;
+  b.innerHTML+=`<div><span class="ts">[${nowTS()}]</span> <span class="${c}">●</span> ${txt}</div>`;
   b.scrollTop=b.scrollHeight;
 }
 
+/* ========= QR ========= */
 async function drawQR(text){
   try{
     qrOverlay.style.display='none';
-    await QRCode.toCanvas(qrCanvas, text||'https://wa.me/6281990767636', {width:280,margin:2,color:{dark:'#075e54',light:'#fff'}});
+    await QRCode.toCanvas(qrCanvas, text||'https://wa.me/6281990767636',{width:260,margin:2,color:{dark:'#075e54',light:'#fff'}});
   }catch(e){
-    qrOverlay.style.display='flex';
-    qrMsg.textContent='gagal memuat QR';
+    qrOverlay.style.display='flex';qrMsg.textContent='gagal memuat QR';
   }
 }
+function showQROverlay(emoji,msg){qrOverlay.style.display='flex';qrOverlay.innerHTML=`<div style="font-size:36px">${emoji}</div><div style="padding:0 14px;text-align:center">${msg}</div>`;}
 
-function fmtUptime(ms){
-  const s=Math.floor(ms/1000);const h=Math.floor(s/3600);const m=Math.floor((s%3600)/60);const sec=s%60;
-  return `${h}j ${m}m ${sec}d`;
-}
-function setStatusPill(connected, text){
+/* ========= STATUS PILL & STATS ========= */
+function fmtUptime(ms){const s=Math.floor(ms/1000);const h=Math.floor(s/3600);const m=Math.floor((s%3600)/60);const sec=s%60;return `${h}j ${m}m ${sec}d`;}
+function setStatusPill(connected,text){
   const st=document.getElementById('status'),tx=document.getElementById('statusText');
   if(connected){st.classList.add('ok');st.classList.remove('off');}else{st.classList.remove('ok');st.classList.add('off');}
   tx.textContent=text;
@@ -586,195 +694,280 @@ function updateStats(s){
   const msgsToday=(s.stats?.messagesToday||0).toLocaleString('id-ID');
   const cmds=(s.stats?.commandsUsed||0).toLocaleString('id-ID');
   const upt=s.isConnected?fmtUptime(s.uptime):'—';
-  document.querySelectorAll('.statCard').forEach(c=>{
-    const lb=c.querySelector('.label')?.textContent;
-    const v=c.querySelector('.val');if(!v)return;
-    if(/Status/i.test(lb))v.textContent=s.isConnected?'ONLINE':'OFFLINE';
-    else if(/Pesan.*Hari/i.test(lb))v.textContent=msgsToday;
-    else if(/Command/i.test(lb))v.textContent=cmds;
-    else if(/Grup$/i.test(lb))v.textContent=s.stats?.groupsCount||'—';
-    else if(/Owner/i.test(lb))v.textContent=s.botNumber?('+'+s.botNumber):'+62 8199-0767-636';
-    else if(/Uptime/i.test(lb))v.textContent=upt;
-  });
-  if(s.connection==='open'){
-    setStatusPill(true,'Online · '+ (s.botName||s.botNumber||'Terhubung'));
-  }else if(s.connection==='qr'||s.connection==='pairing_code'){
-    setStatusPill(false,'Menunggu Pairing...');
-  }else{
-    setStatusPill(false,'Offline');
-  }
+  const el=id=>document.getElementById(id);
+  el('dashStatus').textContent=s.isConnected?'ONLINE':'OFFLINE';
+  el('dashPesan').textContent=s.isConnected?msgsToday:'—';
+  el('dashCmds').textContent=s.isConnected?cmds:'—';
+  el('statGroups').textContent=s.stats?.groupsCount||'—';
+  el('dashOwner').textContent=s.isConnected&&s.botNumber?('+'+s.botNumber):'belum di set';
+  el('dashUptime').textContent=s.isConnected?upt:'—';
+  el('dashStatusFoot').textContent=s.isConnected?('● tertaut sebagai '+(s.botName||s.botNumber||'')):'● belum tertaut';
+  // bars
+  const bar=(id,w)=>{const b=el(id);if(b)b.style.width=w;};
+  bar('dashStatusBar',s.isConnected?'100%':'20%');
+  bar('dashPesanBar',s.isConnected?'72%':'20%');
+  bar('dashCmdsBar',s.isConnected?'54%':'20%');
+  bar('dashGroupsBar',s.stats?.groupsCount?'68%':'20%');
+  bar('dashUptimeBar',s.isConnected?'42%':'0%');
+  if(s.connection==='open'){setStatusPill(true,'Online · '+(s.botName||s.botNumber||'Terhubung'));}
+  else if(s.connection==='qr'||s.connection==='pairing_code'){setStatusPill(false,'Menunggu Pairing...');}
+  else{setStatusPill(false,'Offline — belum tertaut');}
 }
 
 /* ========= API ========= */
-async function api(path, opts={}){
+async function api(path,opts={}){
   const r=await fetch(API_BASE+path,{headers:{'Content-Type':'application/json'},...opts});
   if(!r.ok){const e=await r.json().catch(()=>({error:'HTTP '+r.status}));throw new Error(e.error||'request failed');}
   return r.json();
 }
-
 function connectSSE(){
   if(es)try{es.close();}catch{}
   es=new EventSource(API_BASE+'/api/events');
-  es.addEventListener('status',(e)=>{try{const d=JSON.parse(e.data);updateStats(d);if(d.qr&&d.connection==='qr')drawQR(d.qr);if(d.pairingCode){pairCode.textContent=d.pairingCode;addLog('ok','Pairing code siap: '+d.pairingCode);}if(d.connection==='open'){addLog('ok','✅ Terhubung ke WhatsApp! '+ (d.botName||''));drawQR('');qrOverlay.style.display='flex';qrMsg.innerHTML='<div style="font-size:40px">✅</div>Terhubung!';}}catch(err){}});
-  es.addEventListener('qr',(e)=>{try{const d=JSON.parse(e.data);drawQR(d.qr);addLog('ok','QR baru siap, silahkan scan');pairCode.textContent='––––––––';}catch{}});
-  es.addEventListener('pairing',(e)=>{try{const d=JSON.parse(e.data);pairCode.textContent=d.code;addLog('ok','Kode pairing untuk '+d.number+': '+d.code);}catch{}});
-  es.addEventListener('connection',(e)=>{try{const d=JSON.parse(e.data);if(d.status==='open'){addLog('ok','✅ WhatsApp terhubung sebagai '+ (d.user?.name||''));}else if(d.status==='close'){addLog('wr','Koneksi terputus, mencoba reconnect...');}}catch{}});
-  es.addEventListener('log',(e)=>{try{const d=JSON.parse(e.data);const lv=d.level==='success'||d.level==='info'?'ok':d.level==='warn'?'wr':'er';addL(lv,`[${d.tag}] ${d.msg}`);}catch{}});
-  es.onerror=()=>{/* keep open, browser auto-retry */};
+  es.addEventListener('status',(e)=>{
+    try{const d=JSON.parse(e.data);
+      updateStats(d);
+      if(d.qr&&d.connection==='qr'){drawQR(d.qr);if(wizardStep===2){showQROverlay('🔗','QR siap — silahkan scan dari HP');waitMsg.textContent='Menunggu kamu scan kode QR...';addLog('ok','QR baru siap discan');addW3('QR diterima dari server','ok');}}
+      if(d.pairingCode){pairingCodeVal=d.pairingCode;pairCode.textContent=d.pairingCode;addLog('ok','Kode pairing: '+d.pairingCode);addW3('Pairing code: '+d.pairingCode,'ok');if(wizardStep===2)waitMsg.textContent='Masukkan kode '+d.pairingCode+' di HP kamu...';}
+      if(d.connection==='open'){onConnected(d);}
+    }catch{}
+  });
+  es.addEventListener('qr',(e)=>{
+    try{const d=JSON.parse(e.data);drawQR(d.qr);if(wizardStep===2){showQROverlay('🔗','QR siap — silahkan scan');waitMsg.textContent='Menunggu kamu scan QR...';}addLog('ok','QR baru siap');}catch{}
+  });
+  es.addEventListener('pairing',(e)=>{
+    try{const d=JSON.parse(e.data);pairingCodeVal=d.code;pairCode.textContent=d.code;addLog('ok','Kode pairing siap: '+d.code);addW3('Pairing code diterima: '+d.code,'ok');if(wizardStep===2)waitMsg.textContent='Masukkan kode '+d.code+' di WA kamu...';}catch{}
+  });
+  es.addEventListener('connection',(e)=>{
+    try{const d=JSON.parse(e.data);
+      if(d.status==='open'){onConnected(d);}
+      else if(d.status==='close'){addLog('wr','Koneksi terputus, mencoba reconnect...');addW3('Koneksi terputus','wr');}
+    }catch{}
+  });
+  es.addEventListener('log',(e)=>{
+    try{const d=JSON.parse(e.data);const lv=d.level==='success'||d.level==='info'?'ok':d.level==='warn'?'wr':'er';addL(lv,`[${d.tag}] ${d.msg}`);}catch{}
+  });
+  es.onerror=()=>{/* browser auto-retry */};
 }
 
 async function refreshStatus(){
-  try{
-    const d=await api('/api/status');
-    BACKEND=true;
-    updateStats(d);
-    if(d.qr)drawQR(d.qr);
-    if(d.pairingCode)pairCode.textContent=d.pairingCode;
+  try{const d=await api('/api/status');BACKEND=true;updateStats(d);
     if(!es||es.readyState===2)connectSSE();
+    // kalo bot sudah online dari awal, skip wizard
+    if(d.isConnected&&d.connection==='open'){
+      pairingStarted=false;
+      document.getElementById('w4num').textContent='+'+(d.botNumber||'');
+      goStep(4);
+      addLog('ok','✅ Bot sudah online sebagai '+ (d.botNumber||''));
+    }
     return d;
+  }catch(e){BACKEND=false;return null;}
+}
+
+/* ========= WIZARD ========= */
+function goStep(n){
+  wizardStep=n;
+  [wstep1,wstep2,wstep3,wstep4].forEach((el,i)=>{el.style.display=(i+1===n)?'block':'none';});
+  stepper.querySelectorAll('.step-dot').forEach(d=>{
+    const k=parseInt(d.dataset.n);
+    d.classList.remove('active','done');
+    if(k<n)d.classList.add('done');
+    else if(k===n)d.classList.add('active');
+  });
+  stepper.querySelectorAll('.step-line').forEach((l,i)=>{l.classList.toggle('done',i+1<n);});
+  const titles={
+    1:{t:'Masukkan nomor WhatsApp',s:'Nomor ini yang akan dijadikan akun bot.'},
+    2:{t:'Scan QR / Masukkan kode',s:'Gunakan HP dengan nomor yang sama untuk menautkan.'},
+    3:{t:'Menghubungkan...',s:'Lagi nyambung ke server WhatsApp.'},
+    4:{t:'Berhasil!',s:'Daftarkan nama owner.'},
+  };
+  stepLabel.innerHTML=`<b>Langkah ${n} — ${titles[n].t}</b>${titles[n].s}`;
+  // hide error boxes
+  ['werr1','werr2','werr4'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none';});
+}
+function wizardBack(n){goStep(n);}
+function wizardStartPair(){
+  const num=(pairNumber.value||'').replace(/\D/g,'');
+  const err=document.getElementById('werr1');err.style.display='none';
+  if(!num){err.textContent='⚠ Nomor belum diisi';err.style.display='block';return;}
+  if(!num.startsWith('62')){err.textContent='⚠ Nomor harus pakai kode negara 62 (contoh: 6281990767636), jangan mulai dengan 0';err.style.display='block';return;}
+  if(num.length<10){err.textContent='⚠ Nomor terlalu pendek';err.style.display='block';return;}
+  pairNumberVal=num;
+  document.getElementById('step2num').textContent='+'+num;
+  pairingStarted=true;
+  goStep(2);
+  pairCode.textContent='––––––––';
+  showQROverlay('<span class="spinner"></span>','Meminta kode ke server...');
+  waitConnect.style.display='none';
+  addLog('wr','Memulai pairing untuk nomor +'+num+'...');
+  addW3('Meminta kode pairing untuk +'+num,'info');
+
+  if(BACKEND){
+    requestPairingReal(num);
+  }else{
+    // DEMO mode
+    demoBanner.style.display='block';
+    setTimeout(()=>simStartPair(num),900);
+  }
+}
+function cancelWizard(){
+  if(!confirm('Batalkan pairing? Kode yang sudah diminta akan hangus.'))return;
+  clearInterval(pairTimer);pairingStarted=false;
+  pairCode.textContent='––––––––';
+  showQROverlay('🔗','Belum mulai');
+  waitConnect.style.display='none';
+  goStep(1);
+  addLog('wr','Pairing dibatalkan');
+}
+function copyCode(){
+  if(!pairingCodeVal||pairingCodeVal==='––––––––'){toast('belum ada kode','wr');return;}
+  navigator.clipboard&&navigator.clipboard.writeText(pairingCodeVal).then(()=>toast('kode disalin!','ok'));
+}
+function refreshQR(){
+  addLog('wr','Meminta kode baru...');addW3('Meminta kode pairing baru...','info');
+  if(BACKEND){requestPairingReal(pairNumberVal);}else{simStartPair(pairNumberVal);}
+}
+
+async function requestPairingReal(num){
+  try{
+    const r=await api('/api/pairing',{method:'POST',body:JSON.stringify({number:num})});
+    pairingCodeVal=r.code;pairCode.textContent=r.code;
+    waitConnect.style.display='inline-flex';waitMsg.textContent='Masukkan kode '+r.code+' di WA kamu...';
+    addLog('ok','Kode pairing siap: '+r.code);addW3('Kode siap! Masukkan di HP → Perangkat Tertaut → Tautkan pake nomor','ok');
+    drawQR('https://wa.me/pair/'+r.code.replace(/-/g,''));
+    // start polling connection state
+    startPollingConnection();
   }catch(e){
-    BACKEND=false;
-    return null;
+    addLog('er','Gagal minta kode: '+e.message);addW3('Gagal: '+e.message,'er');
+    showQROverlay('❌',e.message);
+    const err=document.getElementById('werr2');err.textContent='⚠ '+e.message;err.style.display='block';
   }
 }
 
-async function refreshQR(){
-  addLog('wr','meminta QR baru...');
+function startPollingConnection(){
+  clearInterval(pairTimer);
+  let ticks=0;
+  pairTimer=setInterval(async()=>{
+    ticks++;
+    if(!BACKEND)return;
+    try{
+      const d=await api('/api/status');
+      if(d.isConnected&&d.connection==='open'){clearInterval(pairTimer);onConnected(d);return;}
+      // kalo QR berubah (timeout) keliatan otomatis dari SSE
+    }catch(e){}
+    if(ticks>120){clearInterval(pairTimer);addLog('wr','Pairing timeout (2 menit). Coba refresh.');addW3('Timeout. Klik Refresh untuk kode baru.','wr');}
+  },1000);
+}
+
+function onConnected(d){
+  clearInterval(pairTimer);
+  if(wizardStep===4)return;
+  addLog('ok','✅ BERHASIL TERTAUT sebagai '+(d.user?.name||d.botNumber||''));
+  addW3('✅ Terhubung sebagai '+(d.user?.name||d.botNumber||'Bot'),'ok');
+  goStep(3);
+  setTimeout(()=>{
+    document.getElementById('w4num').textContent='+'+(d.botNumber||pairNumberVal);
+    goStep(4);
+  },1800);
+}
+
+async function wizardFinishOwner(){
+  const name=document.getElementById('wOwnerName').value.trim();
+  const num=document.getElementById('wOwnerNum').value.replace(/\D/g,'');
+  const err=document.getElementById('werr4');err.style.display='none';
+  if(!name){err.textContent='⚠ Nama owner belum diisi';err.style.display='block';return;}
+  if(!num.startsWith('62')||num.length<10){err.textContent='⚠ Nomor owner harus format 62xxx';err.style.display='block';return;}
+  // simpan ke backend kalo ada
   if(BACKEND){
-    // cara termudah: trigger restart proses (ga) — minta server generate QR ulang dgn logout? Tidak. QR muncul otomatis kalo belum pair.
-    // Polling saja.
-    try{const d=await api('/api/status');if(d.qr){drawQR(d.qr);addLog('ok','QR diperbarui');}else addLog('ok',d.isConnected?'Bot sudah online — logout dulu kalo mau QR baru':'Menunggu QR dari server...');}
-    catch(e){addLog('er','gagal: '+e.message);}
+    try{await api('/api/owner',{method:'POST',body:JSON.stringify({numbers:[num]})});addLog('ok','Owner disimpan: +'+num+' ('+name+')');}catch(e){toast(e.message,'err');}
   }else{
-    simRefresh();
+    localStorage.setItem('gilz_owner',num);localStorage.setItem('gilz_owner_name',name);addLog('ok','(demo) Owner disimpan: '+name+' — '+num);
+  }
+  showOwner(num,name);
+  toast('🎉 Selamat datang, '+name+'!','ok');
+  pairingStarted=false;
+  go('dashboard');
+  // restart bot biar owner baru ke-load? tunggu user yg klik, kita kasih tau aja
+  if(BACKEND){
+    setTimeout(()=>toast('Disarankan restart bot agar owner aktif','wr'),1500);
   }
 }
-async function requestPairing(){
-  const num=(pairNumber.value||'').replace(/\D/g,'');
-  if(!num||num.length<10){toast('isi nomor dulu (contoh 6281990767636)','err');return;}
-  if(BACKEND){
-    addLog('wr','meminta kode pairing ke '+num+'...');
-    try{const r=await api('/api/pairing',{method:'POST',body:JSON.stringify({number:num})});
-      pairCode.textContent=r.code;
-      addLog('ok','Kode siap: '+r.code+' — masukkan di WA > Perangkat Tertaut > Tautkan pake nomor');
-    }catch(e){addLog('er','gagal: '+e.message);toast(e.message,'err');}
-  }else{
-    simPair(num);
-  }
+
+/* ========= SIMULASI / DEMO (kalo dibuka di Pages tanpa backend) ========= */
+function randCode(){const a='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';let s='';for(let i=0;i<8;i++)s+=a[Math.floor(Math.random()*a.length)];return s.match(/.{1,4}/g).join('-');}
+let i;
+function simStartPair(num){
+  clearInterval(pairTimer);
+  pairCode.textContent='––––––––';
+  setTimeout(()=>{
+    const code=randCode();pairingCodeVal=code;pairCode.textContent=code;
+    drawQR('https://wa.me/pair/'+code.replace(/-/g,''));
+    waitConnect.style.display='inline-flex';waitMsg.textContent='(DEMO) Ini cuma kode contoh. Klik tombol "Saya sudah masukkan kode" kalo mau lanjut.';
+    addLog('ok','(DEMO) Kode contoh: '+code);addW3('(DEMO) Ini simulasi karena bukan di server VPS','wr');
+    // tombol tambahan untuk lanjut manual
+    const row=waitConnect.parentElement.querySelector('.row');
+    if(row&&!row.querySelector('.simNext')){
+      const b=document.createElement('button');b.className='btn green sm simNext';b.textContent='✅ Saya sudah masukkan kode';
+      b.onclick=()=>{clearInterval(pairTimer);const d={botNumber:pairNumberVal,user:{name:'Bot '+pairNumberVal.slice(-4)}};onConnected(d);};
+      row.appendChild(b);
+    }
+    let sec=0;pairTimer=setInterval(()=>{sec++;if(sec>=90){clearInterval(pairTimer);addLog('wr','(DEMO) Kode expired, klik Refresh');addW3('Kode expired','wr');}},1000);
+  },1000);
 }
+
+/* ========= TOMBOL LAIN ========= */
 async function doLogout(){
   if(!confirm('Logout & hapus session? Nanti harus scan QR ulang.'))return;
   if(BACKEND){
-    addLog('wr','meminta logout...');
-    try{await api('/api/logout',{method:'POST'});toast('logout diminta, bot restart...','wr');}catch(e){toast(e.message,'err');}
-  }else{
-    resetPair();
-    toast('(simulasi) logout','wr');
-  }
+    addLog('wr','Meminta logout...');addW3('Logout diminta...','wr');
+    try{await api('/api/logout',{method:'POST'});toast('logout diminta, bot restart...','wr');
+      setTimeout(()=>{pairingStarted=false;goStep(1);showQROverlay('🔗','Belum mulai');},1500);
+    }catch(e){toast(e.message,'err');}
+  }else{toast('(demo) logout','wr');pairingStarted=false;goStep(1);showQROverlay('🔗','Belum mulai');}
 }
 async function doRestart(){
-  if(BACKEND){
-    try{await api('/api/restart',{method:'POST'});addL('wr','[system] restart diminta...');}catch(e){toast(e.message,'err');}
-  }else{
-    addL('wr','[system] (simulasi) restart');
-  }
+  if(BACKEND){try{await api('/api/restart',{method:'POST'});addL('wr','[system] restart diminta...');addW3('Restart diminta...','wr');}catch(e){toast(e.message,'err');}}
+  else{addL('wr','[system] (simulasi) restart');}
 }
 async function saveSettings(){
   if(BACKEND){
-    const settings={
-      prefix:document.getElementById('setPrefix')?.value||'.',
-      botName:document.getElementById('setName')?.value||'',
-      toggles:{}
-    };
+    const settings={prefix:document.getElementById('setPrefix')?.value||'.',botName:document.getElementById('setName')?.value||'',toggles:{}};
     document.querySelectorAll('.tog').forEach(t=>{settings.toggles[t.dataset.k]=t.classList.contains('on');});
-    try{await api('/api/settings',{method:'POST',body:JSON.stringify({settings})});toast('pengaturan tersimpan!','ok');}
-    catch(e){toast(e.message,'err');}
-  }else{
-    toast('pengaturan tersimpan! (simulasi)','ok');
-  }
+    try{await api('/api/settings',{method:'POST',body:JSON.stringify({settings})});toast('pengaturan tersimpan!','ok');}catch(e){toast(e.message,'err');}
+  }else{toast('pengaturan tersimpan! (simulasi)','ok');}
 }
 function clearLog(){document.getElementById('logBox').innerHTML='<div><span class="ts">[clear]</span> log dibersihkan</div>';}
-function resetPair(){
-  clearInterval(pairTimer);pairCode.textContent='––––––––';
-  qrOverlay.style.display='flex';qrMsg.innerHTML='<div style="font-size:40px">🔗</div>klik Refresh QR / minta kode pairing';
-  if(BACKEND)addLog('wr','koneksi diputus'); else toast('koneksi diputus','err');
-}
 
-/* ========= OWNER ========= */
-async function saveOwner(e){
+/* ========= OWNER (view-owner tab, bukan wizard) ========= */
+async function saveOwnerForm(e){
   e.preventDefault();
   const num=document.getElementById('ownerNum').value.replace(/\D/g,'');
   if(!num.startsWith('62')||num.length<10){toast('format nomor salah! pakai 62xxxx','err');return;}
-  if(BACKEND){
-    try{
-      await api('/api/owner',{method:'POST',body:JSON.stringify({numbers:[num]})});
-      showOwner(num);toast('Owner tersimpan 👑 (restart bot untuk efek penuh)','ok');
-    }catch(e){toast(e.message,'err');}
-  }else{
-    localStorage.setItem('gilz_owner',num);showOwner(num);toast('Owner tersimpan 👑','ok');
-  }
+  if(BACKEND){try{await api('/api/owner',{method:'POST',body:JSON.stringify({numbers:[num]})});showOwner(num);toast('Owner tersimpan 👑 (restart untuk efek)','ok');}catch(e){toast(e.message,'err');}}
+  else{localStorage.setItem('gilz_owner',num);showOwner(num);toast('Owner tersimpan 👑','ok');}
 }
-function showOwner(num){document.getElementById('ownerInfo').classList.remove('hidden');document.getElementById('ownerNumDisp').textContent='+'+num;}
+function showOwner(num,name){
+  document.getElementById('ownerInfo').classList.remove('hidden');
+  document.getElementById('ownerNumDisp').textContent='+'+num;
+  const nn=name||localStorage.getItem('gilz_owner_name')||'';
+  const nameEl=document.getElementById('ownerNameDisp');if(nameEl)nameEl.textContent=nn?nn:'';
+}
 function clearOwner(){
-  if(BACKEND){
-    api('/api/owner',{method:'POST',body:JSON.stringify({numbers:[]})}).then(()=>{document.getElementById('ownerInfo').classList.add('hidden');toast('owner dilepas','wr');}).catch(e=>toast(e.message,'err'));
-  }else{
-    localStorage.removeItem('gilz_owner');document.getElementById('ownerInfo').classList.add('hidden');toast('owner dilepas','wr');
-  }
+  if(BACKEND){api('/api/owner',{method:'POST',body:JSON.stringify({numbers:[]})}).then(()=>{document.getElementById('ownerInfo').classList.add('hidden');toast('owner dilepas','wr');}).catch(e=>toast(e.message,'err'));}
+  else{localStorage.removeItem('gilz_owner');localStorage.removeItem('gilz_owner_name');document.getElementById('ownerInfo').classList.add('hidden');toast('owner dilepas','wr');}
 }
 function fillGilz(){document.getElementById('ownerNum').value='6281990767636';}
 async function loadOwner(){
-  if(BACKEND){
-    try{const r=await api('/api/owner');if(r.numbers&&r.numbers[0])showOwner(r.numbers[0]);}catch{}
-  }else{
-    const s=localStorage.getItem('gilz_owner');if(s)showOwner(s);
-  }
+  if(BACKEND){try{const r=await api('/api/owner');if(r.numbers&&r.numbers[0])showOwner(r.numbers[0]);}catch{}}
+  else{const s=localStorage.getItem('gilz_owner');if(s)showOwner(s);}
 }
-
-/* ========= GROUPS (real dari socket kalo ada) ========= */
 async function loadGroups(){
   if(!BACKEND)return;
-  try{
-    const r=await api('/api/groups');
-    if(r.groups&&r.groups.length){
-      document.getElementById('statGroups').textContent=r.groups.length;
-      const tot=r.groups.reduce((a,g)=>a+(g.size||0),0);
-      // update stat anggota kalo ada
-      document.querySelectorAll('.statCard .label').forEach(l=>{if(/Anggota|Member/i.test(l.textContent)){l.parentElement.querySelector('.val').textContent=tot.toLocaleString('id-ID');}});
-    }
+  try{const r=await api('/api/groups');
+    if(r.groups&&r.groups.length){document.getElementById('statGroups').textContent=r.groups.length;}
   }catch{}
 }
 
-/* ========= CHART ========= */
-function drawChart(){
-  const cv=document.getElementById('chart');if(!cv)return;
-  const ctx=cv.getContext('2d');const W=cv.width=cv.offsetWidth;const H=cv.height=180;ctx.clearRect(0,0,W,H);
-  const data=[420,650,380,820,1100,950,1284];const days=['S','S','R','K','J','S','M'];
-  const max=Math.max(...data)*1.1;const bw=W/(data.length*1.6);ctx.fillStyle='#152420';ctx.fillRect(0,0,W,H);
-  data.forEach((v,i)=>{const x=(W/data.length)*i+(W/data.length-bw)/2;const h=(v/max)*(H-30);const g=ctx.createLinearGradient(x,H,x,H-h);g.addColorStop(0,'#128c7e');g.addColorStop(1,'#25d366');ctx.fillStyle=g;ctx.fillRect(x,H-h,bw,h);ctx.fillStyle='#627d74';ctx.font='11px Poppins';ctx.textAlign='center';ctx.fillText(days[i],x+bw/2,H-8);ctx.fillStyle='#eafff6';ctx.font='10px Poppins';ctx.fillText(v>=1000?(v/1000).toFixed(1)+'k':v,x+bw/2,H-h-6);});
-}
-
-/* ========= SIMULASI MODE (kalo backend gada / dibuka di Pages) ========= */
-function randCode(){const a='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';let s='';for(let i=0;i<8;i++)s+=a[Math.floor(Math.random()*a.length)];return s.match(/.{1,4}/g).join('-');}
-function simRefresh(){
-  clearInterval(pairTimer);
-  const code=randCode();pairCode.textContent=code;
-  qrOverlay.style.display='flex';qrMsg.innerHTML='<div style="font-size:38px">⏳</div>menghubungkan ke server (MODE DEMO)...';
-  addLog('wr','(DEMO) meminta kode pairing...');
-  setTimeout(()=>{drawQR('https://wa.me/pair/'+code.replace(/-/g,''));addLog('ok','(DEMO) kode siap: '+code);},700);
-  let sec=60;pairTimer=setInterval(()=>{sec--;if(sec<=0){addLog('wr','(DEMO) kode kadaluarsa');simRefresh();}},1000);
-}
-function simPair(num){
-  clearInterval(pairTimer);
-  const code=randCode();pairCode.textContent=code;
-  qrOverlay.style.display='flex';qrMsg.innerHTML='<div style="font-size:38px">⏳</div>menghubungkan ke '+num+'...';
-  addLog('wr','(DEMO) request pairing ke '+num);
-  setTimeout(()=>{drawQR('https://wa.me/pair/'+code.replace(/-/g,''));addLog('ok','(DEMO) kode pairing: '+code);
-    setTimeout(()=>{addLog('ok','(DEMO) ✅ perangkat tertaut!');toast('(DEMO) Pairing berhasil!','ok');go('owner');},3000);
-  },800);
-}
-
-/* ========= GROUPS STATIC LIST (fallback) ========= */
+/* ========= STATIC DATA (groups/features/commands/chart) ========= */
 const groups=[
   {n:'📢 Grup Wibu Indo',m:124,al:true,w:true},{n:'🎓 Kelas 12 IPA 1',m:36,al:true,w:true},
   {n:'🛒 Toko Online',m:248,al:true,w:true},{n:'🎮 Free Fire Squad',m:48,al:false,w:true},
@@ -782,8 +975,6 @@ const groups=[
   {n:'📚 Belajar Kuy',m:16,al:true,w:true},{n:'🎵 Musik Indo',m:63,al:true,w:true},
 ];
 const gbody=document.getElementById('groupBody');if(gbody){groups.forEach(g=>{gbody.innerHTML+=`<tr><td>${g.n}</td><td>${g.m}</td><td>${g.al?'<span class="tag on">ON</span>':'<span class="tag off">OFF</span>'}</td><td>${g.w?'<span class="tag on">ON</span>':'<span class="tag off">OFF</span>'}</td><td><button class="btn sm outline">Atur</button></td></tr>`;});}
-
-/* ========= FEATURES & COMMANDS STATIC ========= */
 const feats=[
   {i:'💬',n:'Auto Respon',d:'Balas pesan otomatis dengan kata kunci.'},
   {i:'⛔',n:'Anti Link',d:'Hapus pesan link dan kick otomatis.'},
@@ -805,7 +996,6 @@ const feats=[
   {i:'⚔️',n:'War & Battle',d:'Game war RPG antar member.'},
 ];
 const fl=document.getElementById('featList');if(fl)feats.forEach(f=>fl.innerHTML+=`<div class="feat"><div class="ic">${f.i}</div><b>${f.n}</b><span>${f.d}</span></div>`);
-
 const cmds=[
   {c:'.menu',d:'Tampilkan menu utama bot'},
   {c:'.help',d:'Bantuan & daftar perintah'},
@@ -834,40 +1024,53 @@ const cmds=[
 ];
 const cl=document.getElementById('cmdList');if(cl)cmds.forEach(c=>cl.innerHTML+=`<div class="cmd"><div class="pre">${c.c}</div><div class="nm">${c.d}</div></div>`);
 
-/* ========= INIT ========= */
+/* ========= CHART ========= */
+function drawChart(){const cv=document.getElementById('chart');if(!cv)return;const ctx=cv.getContext('2d');const W=cv.width=cv.offsetWidth;const H=cv.height=180;ctx.clearRect(0,0,W,H);const data=[420,650,380,820,1100,950,1284];const days=['S','S','R','K','J','S','M'];const max=Math.max(...data)*1.1;const bw=W/(data.length*1.6);ctx.fillStyle='#152420';ctx.fillRect(0,0,W,H);data.forEach((v,i)=>{const x=(W/data.length)*i+(W/data.length-bw)/2;const h=(v/max)*(H-30);const g=ctx.createLinearGradient(x,H,x,H-h);g.addColorStop(0,'#128c7e');g.addColorStop(1,'#25d366');ctx.fillStyle=g;ctx.fillRect(x,H-h,bw,h);ctx.fillStyle='#627d74';ctx.font='11px Poppins';ctx.textAlign='center';ctx.fillText(days[i],x+bw/2,H-8);ctx.fillStyle='#eafff6';ctx.font='10px Poppins';ctx.fillText(v>=1000?(v/1000).toFixed(1)+'k':v,x+bw/2,H-h-6);});}
+
+/* ========= BOOT ========= */
 async function boot(){
-  setStatusPill(false,'Menghubungkan...');
-  addLog('ok','sistem GilzzzBotzz v2.5 aktif');
+  // Awal: OFFLINE sampai beneran connected
+  setStatusPill(false,'Belum tertaut');
+  document.getElementById('dashStatus').textContent='OFFLINE';
+  addLog('ok','GilzzzBotzz v3 aktif');
   addL('ok','[boot] Dashboard dimuat');
   drawChart();window.addEventListener('resize',drawChart);
+  goStep(1);
   await loadOwner();
 
   const st=await refreshStatus();
   if(BACKEND){
-    addLog('ok','✅ Backend terdeteksi — semua fitur terhubung ke bot');
-    addL('ok','[api] Terhubung ke backend Node.js');
+    addLog('ok','✅ Backend Node.js terdeteksi');
+    addL('ok','[api] Terhubung ke backend');
     loadGroups();
-    if(st&&st.connection==='open'){addLog('ok','Bot sudah online sebagai '+ (st.botNumber||''));}
-    else if(st&&st.qr){drawQR(st.qr);addLog('ok','QR siap discan dari HP');}
-    else{addLog('wr','Menunggu QR/pairing dari server...');}
+    if(st&&st.connection==='open'){addLog('ok','Bot SUDAH online sebagai '+ (st.botNumber||''));setStatusPill(true,'Online · '+(st.botNumber||''));}
+    else{addLog('wr','Bot belum tertaut. Klik menu "Tautkan Perangkat" untuk mulai.');}
   }else{
-    addLog('wr','⚠ Mode DEMO (backend ga ketemu). Fitur cuma simulasi.');
-    addLog('wr','Untuk pairing beneran: jalankan `node index.js` di server, lalu buka http://server-kamu:3000');
-    addL('wr','[boot] Mode demo — jalankan "node index.js" di VPS untuk pairing beneran');
-    setTimeout(simRefresh,800);
+    demoBanner.style.display='block';
+    addLog('wr','⚠ Mode PREVIEW (backend ga ketemu). Klik "Mulai Tautkan Perangkat" buat liat simulasi.');
+    addLog('wr','Untuk pairing BENERAN: jalankan `node index.js` di VPS, buka http://IP-VPS:3000');
+    addL('wr','[boot] Mode preview — jalankan bot di server untuk pairing nyata');
   }
 
-  /* dummy logs berjalan (berguna di demo + tambah hidup di real mode) */
   setInterval(()=>{
-    const msgs=[['ok','pesan diterima dari +62812-xxxx'],['ok','.menu diproses (12ms)'],['wr','user spam terdeteksi, diperingatkan'],['ok','broadcast terkirim ke grup'],['ok','stiker dibuat (340ms)']];
+    const msgs=[['ok','pesan diterima'],['ok','.menu diproses'],['wr','spam terdeteksi'],['ok','stiker dibuat']];
     const m=msgs[Math.floor(Math.random()*msgs.length)];addL(m[0],m[1]);
     if(BACKEND)refreshStatus().catch(()=>{});
-  },7000);
-
-  // refresh status tiap 15s
+  },9000);
   setInterval(()=>{if(BACKEND)refreshStatus().catch(()=>{});},15000);
 }
+
 /* Toggle klik */
+document.addEventListener('click',(e)=>{
+  const t=e.target.closest('.tog');
+  if(t){t.classList.toggle('on');const cb=t.querySelector('input[type=checkbox]');if(cb)cb.checked=t.classList.contains('on');}
+});
+document.querySelectorAll('.tog').forEach(t=>{const cb=t.querySelector('input[type=checkbox]');if(cb)cb.checked=t.classList.contains('on');});
+
+// owner form submit handler
+window.saveOwner=saveOwnerForm;
+
+setTimeout(boot,300);
 document.addEventListener('click',(e)=>{
   const t=e.target.closest('.tog');
   if(t){
