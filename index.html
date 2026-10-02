@@ -93,6 +93,7 @@ main{margin-top:62px;padding:26px 22px 70px;transition:padding-left .3s;max-widt
 .btn.gold{background:linear-gradient(135deg,#fbbf24,#f59e0b);box-shadow:0 4px 14px rgba(245,158,11,.2);}
 .btn.gold:hover{box-shadow:0 8px 24px rgba(245,158,11,.35);}
 .btn.purple{background:linear-gradient(135deg,#c084fc,#9333ea);}
+.btn.green{background:linear-gradient(135deg,#25d366,#128c7e);}
 .btn.blue{background:linear-gradient(135deg,#38bdf8,#0284c7);}
 .btn.outline{background:transparent;border:1px solid var(--border);color:var(--text);}
 .btn.outline:hover{background:var(--card2);}
@@ -306,13 +307,18 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
           <div class="step"><div class="num">3</div><div class="body"><b>Pilih "Tautkan dengan nomor telepon"</b><span>Masukkan kode delapan huruf di bawah ini ATAU scan QR di samping.</span></div></div>
         </div>
         <div class="codeBox" id="codeBox" style="margin-top:18px">
-          <div class="tiny">Kode Pairing (8 huruf)</div>
+          <div class="tiny">Nomor WhatsApp (untuk pairing code)</div>
+          <div class="row" style="gap:8px;margin:8px 0 14px">
+            <input id="pairNumber" type="tel" placeholder="contoh: 6281990767636" style="flex:1;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-family:inherit;font-size:14px">
+            <button class="btn green" onclick="requestPairing()" style="white-space:nowrap">📲 Minta Kode</button>
+          </div>
+          <div class="tiny">Kode Pairing (8 huruf) — masukkan di WA → Perangkat Tertaut → Tautkan pake nomor</div>
           <div class="code" id="pairCode">––––––––</div>
           <div class="hint">kode otomatis baru tiap 60 detik · pastikan internet stabil</div>
         </div>
         <div class="row">
-          <button class="btn" onclick="refreshPair()">🔄 Refresh Kode</button>
-          <button class="btn outline" onclick="resetPair()">🔌 Putuskan</button>
+          <button class="btn" onclick="refreshQR()">🔄 Refresh QR</button>
+          <button class="btn outline" onclick="doLogout()">🔌 Logout</button>
           <button class="btn purple" onclick="toast('kode disalin!','ok');navigator.clipboard&&navigator.clipboard.writeText(document.getElementById('pairCode').textContent)">📋 Salin Kode</button>
         </div>
       </div>
@@ -371,7 +377,7 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
   <div class="sub">Bot aktif di 47 grup. Atur fitur per-grup.</div>
   <div class="panel">
     <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin:0">
-      <div class="card"><div class="label">Grup Aktif</div><div class="val g">47</div><div class="foot">✅ bot aktif merespon</div></div>
+      <div class="card"><div class="label">Grup Aktif</div><div class="val g" id="statGroups">47</div><div class="foot">✅ bot aktif merespon</div></div>
       <div class="card"><div class="label">Total Anggota</div><div class="val b">3.284</div><div class="foot">👥 akumulasi</div></div>
       <div class="card"><div class="label">Anti Link</div><div class="val go">42</div><div class="foot">⛔ grup dengan anti-link on</div></div>
       <div class="card"><div class="label">Welcome Msg</div><div class="val p">38</div><div class="foot">👋 pesan sambutan aktif</div></div>
@@ -412,28 +418,28 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
   <div class="sub">Atur perilaku bot sesuai selera.</div>
   <div class="panel">
     <h2>Umum</h2>
-    <div class="setting"><div class="inf"><b>Prefix Command</b><span>Simbol di awal command (contoh: .menu, !help)</span></div><input type="text" value="." style="width:60px;text-align:center;font-weight:700"></div>
-    <div class="setting"><div class="inf"><b>Nama Bot</b><span>Nama yang muncul di respon bot</span></div><input type="text" value="GilzzzBotzz" style="max-width:220px"></div>
-    <div class="setting"><div class="inf"><b>Auto-read pesan</b><span>Centang biru otomatis</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
-    <div class="setting"><div class="inf"><b>Typing indicator</b><span>Kirim "sedang mengetik..." sebelum jawab</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+    <div class="setting"><div class="inf"><b>Prefix Command</b><span>Simbol di awal command (contoh: .menu, !help)</span></div><input id="setPrefix" type="text" value="." style="width:60px;text-align:center;font-weight:700"></div>
+    <div class="setting"><div class="inf"><b>Nama Bot</b><span>Nama yang muncul di respon bot</span></div><input id="setName" type="text" value="GilzzzBotzz" style="max-width:220px"></div>
+    <div class="setting tog on" data-k="autoread"><div class="inf"><b>Auto-read pesan</b><span>Centang biru otomatis</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+    <div class="setting tog on" data-k="typing"><div class="inf"><b>Typing indicator</b><span>Kirim "sedang mengetik..." sebelum jawab</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
   </div>
   <div class="panel">
     <h2>Fitur Proteksi Grup</h2>
-    <div class="setting"><div class="inf"><b>Anti Link</b><span>Hapus pesan berisi link otomatis</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
-    <div class="setting"><div class="inf"><b>Anti Toxic</b><span>Filter kata kasar</span></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
-    <div class="setting"><div class="inf"><b>Anti Spam</b><span>Peringatkan user yang spam chat</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
-    <div class="setting"><div class="inf"><b>Welcome Message</b><span>Sambut anggota yang baru masuk</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
-    <div class="setting"><div class="inf"><b>Anti Virtex</b><span>Blok pesan virtex/crash yang bikin WA lag</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+    <div class="setting tog on" data-k="antilink"><div class="inf"><b>Anti Link</b><span>Hapus pesan berisi link otomatis</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+    <div class="setting tog" data-k="antitoxic"><div class="inf"><b>Anti Toxic</b><span>Filter kata kasar</span></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
+    <div class="setting tog on" data-k="antispam"><div class="inf"><b>Anti Spam</b><span>Peringatkan user yang spam chat</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+    <div class="setting tog on" data-k="welcome"><div class="inf"><b>Welcome Message</b><span>Sambut anggota yang baru masuk</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+    <div class="setting tog on" data-k="antivirtex"><div class="inf"><b>Anti Virtex</b><span>Blok pesan virtex/crash yang bikin WA lag</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
   </div>
   <div class="panel">
     <h2>AI & Respon</h2>
-    <div class="setting"><div class="inf"><b>AI Chat (Gemini)</b><span>Jawab pertanyaan otomatis pakai AI</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
-    <div class="setting"><div class="inf"><b>Auto-respon sapaan</b><span>Balas "p", "hai", "assalamualaikum"</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+    <div class="setting tog on" data-k="ai"><div class="inf"><b>AI Chat (Gemini)</b><span>Jawab pertanyaan otomatis pakai AI</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+    <div class="setting tog on" data-k="autorespon"><div class="inf"><b>Auto-respon sapaan</b><span>Balas "p", "hai", "assalamualaikum"</span></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
     <div class="setting"><div class="inf"><b>Bahasa</b><span>Bahasa respon bot</span></div>
       <select style="max-width:180px"><option>Bahasa Indonesia</option><option>English</option><option>Jawa</option><option>Sunda</option></select>
     </div>
   </div>
-  <div class="row"><button class="btn" onclick="toast('Pengaturan tersimpan!','ok')">💾 Simpan Semua</button><button class="btn danger" onclick="if(confirm('yakin mau restart bot?'))toast('bot direstart...','wr')">🔄 Restart Bot</button></div>
+    <div class="row" style="margin-top:16px"><button class="btn" onclick="saveSettings()">💾 Simpan Semua</button><button class="btn danger" onclick="if(confirm('yakin mau restart bot?')){doRestart();toast('bot direstart...','wr');}">🔄 Restart Bot</button></div>
 </section>
 
 <!-- LOGS -->
@@ -470,15 +476,21 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
 <section class="view hidden" id="view-tutorial">
   <div class="pageTitle"><span class="emoji">📘</span> Panduan Install</div>
   <div class="sub">Cara menjalankan GilzzzBotzz di VPS / RDP / Replit / laptopmu sendiri.</div>
-  <div class="panel"><h2>Persyaratan</h2><div class="steps" style="margin-top:14px">
-    <div class="step"><div class="num">1</div><div class="body"><b>Node.js 18+ / 20 LTS</b><span>Download di nodejs.org, jalankan installer.</span></div></div>
-    <div class="step"><div class="num">2</div><div class="body"><b>Download source bot</b><span>Dari link official / github GilzzzBotzz.</span></div></div>
-    <div class="step"><div class="num">3</div><div class="body"><b>Buka terminal / cmd di folder bot</b><span>Ketik <code style="color:var(--green);background:var(--card2);padding:2px 8px;border-radius:6px">npm install</code> lalu enter.</span></div></div>
-    <div class="step"><div class="num">4</div><div class="body"><b>Jalankan bot</b><span>Ketik <code style="color:var(--green);background:var(--card2);padding:2px 8px;border-radius:6px">npm start</code>, scan QR dari dashboard ini.</span></div></div>
-    <div class="step"><div class="num">5</div><div class="body"><b>Bot online 24/7</b><span>Daftarkan nomor owner, selesai!</span></div></div>
+  <div class="panel"><h2>Persyaratan</h2>
+    <div style="margin-bottom:14px;padding:12px 14px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.25);border-radius:12px;font-size:13px">
+      <b style="color:var(--green)">✅ Web dashboard INI nyambung ke bot.</b> Jalankan bot dengan Node di server/VPS, lalu buka <code style="color:var(--green);background:var(--card2);padding:1px 6px;border-radius:4px">http://IP-VPS-kamu:3000</code> — QR / pairing code / setting / log di web bakal REAL TIME.
+    </div>
+    <div class="steps" style="margin-top:14px">
+    <div class="step"><div class="num">1</div><div class="body"><b>Node.js 22+</b><span>Bot butuh Node >= 22. Cek: <code style="color:var(--green);background:var(--card2);padding:2px 6px;border-radius:6px">node -v</code></span></div></div>
+    <div class="step"><div class="num">2</div><div class="body"><b>Upload source bot ke VPS</b><span>Pake git / scp / FileZilla. Pastikan folder <code style="color:var(--green);background:var(--card2);padding:2px 6px;border-radius:6px">public/</code> dan <code style="color:var(--green);background:var(--card2);padding:2px 6px;border-radius:6px">src/dashboard-server.js</code> ada.</span></div></div>
+    <div class="step"><div class="num">3</div><div class="body"><b>Install dependencies</b><span>Di folder bot ketik <code style="color:var(--green);background:var(--card2);padding:2px 8px;border-radius:6px">npm install</code> lalu enter.</span></div></div>
+    <div class="step"><div class="num">4</div><div class="body"><b>Jalankan bot</b><span>Ketik <code style="color:var(--green);background:var(--card2);padding:2px 8px;border-radius:6px">npm start</code>. Dashboard web otomatis nyala di port 3000. Buka di browser, masuk ke menu <b>Tautkan Perangkat</b>.</span></div></div>
+    <div class="step"><div class="num">5</div><div class="body"><b>Pairing</b><span>Masukin nomor WA kamu (format 62xxx) → klik <b>Minta Kode</b> → buka WA di HP → Perangkat Tertaut → Tautkan pake nomor → masukin kode 8 huruf. Selesai.</span></div></div>
+    <div class="step"><div class="num">6</div><div class="body"><b>Daftarin Owner</b><span>Setelah terhubung, buka menu <b>Owner Bot</b> dan masukin nomor owner yang bisa kontrol penuh.</span></div></div>
+    <div class="step"><div class="num">7</div><div class="body"><b>(Opsional) Biar 24/7</b><span>Pake <code style="color:var(--green);background:var(--card2);padding:2px 6px;border-radius:6px">pm2</code>: <code style="color:var(--green);background:var(--card2);padding:2px 6px;border-radius:6px">npm i -g pm2 && pm2 start index.js --name gilzzzbotzz && pm2 save</code></span></div></div>
   </div>
-  <div class="row"><a class="btn" href="https://wa.me/6281990767636" target="_blank">💬 Minta bantuan install</a><button class="btn outline" onclick="toast('link github disalin','ok')">📋 Salin link github</button></div>
-  <div style="margin-top:18px;padding:14px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:12px;font-size:13px;color:#fde68a"><b>💡 Tidak pakai Pterodactyl</b> — Pterodactyl itu panel buat game server (Minecraft, CS, dll). Bot WhatsApp jalan cuma dengan Node.js biasa, bisa di VPS, Replit, Railway, bahkan laptopmu dirumah.</div>
+  <div class="row"><a class="btn" href="https://wa.me/6281990767636" target="_blank">💬 Minta bantuan install</a><a class="btn outline" href="https://github.com/alfarouq123/jadibotgilz" target="_blank">📂 Repo GitHub</a></div>
+  <div style="margin-top:18px;padding:14px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:12px;font-size:13px;color:#fde68a"><b>💡 Tidak pakai Pterodactyl</b> — Pterodactyl itu panel buat game server (Minecraft, CS, dll). Bot WhatsApp jalan cuma dengan Node.js biasa (VPS, RDP, Railway, Render, Replit, bahkan laptopmu dirumah).</div>
   </div>
 </section>
 
@@ -500,6 +512,18 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
 
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 <script>
+/* =======================================================
+   GilzzzBotzz Dashboard - v3 REAL API
+   - Auto-detect backend (/api/status)
+   - Kalo backend ada (Node server jalan) -> pake API beneran (SSE, pairing, QR, owner, settings, logs, restart, logout)
+   - Kalo cuma dibuka di GitHub Pages / file:// -> fallback ke mode SIMULASI (biar keliatan hidup)
+======================================================= */
+const API_BASE = (location.port === '3000' || location.hostname === 'localhost' || location.hostname === '127.0.0.1') ? '' : '';
+// biar flexible: coba hit /api/status dulu, kalo ada ya pake, kalo gada -> sim
+let BACKEND = false;
+let es = null;
+let pairTimer = null;
+
 /* ========= NAV ========= */
 const burger=document.getElementById('burger'),sidebar=document.getElementById('sidebar'),backdrop=document.getElementById('backdrop');
 burger.onclick=()=>{burger.classList.toggle('open');sidebar.classList.toggle('open');backdrop.classList.toggle('show');};
@@ -516,46 +540,250 @@ function go(v){
 window.addEventListener('resize',()=>document.querySelector('main').classList.toggle('sb-open',sidebar.classList.contains('open')&&window.innerWidth>=1024));
 
 /* ========= TOAST ========= */
-function toast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(type==='err'?'err':'');setTimeout(()=>t.className='toast',2500);}
+function toast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(type==='err'?'err':type==='wr'?'wr':'');setTimeout(()=>t.className='toast',2800);}
 
-/* ========= PAIRING ========= */
-const pairCode=document.getElementById('pairCode'),pairLog=document.getElementById('pairLog'),qrCanvas=document.getElementById('qrCanvas'),qrOverlay=document.getElementById('qrOverlay'),qrMsg=document.getElementById('qrMsg');
-function randCode(){const a='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';let s='';for(let i=0;i<8;i++)s+=a[Math.floor(Math.random()*a.length)];return s.match(/.{1,4}/g).join('-');}
-function addLog(cls,msg){const t=new Date();const ts=String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0')+':'+String(t.getSeconds()).padStart(2,'0');const c=cls==='ok'?'ok':cls==='wr'?'wr':'er';pairLog.innerHTML+=`<div><span class="ts">[${ts}]</span> <span class="${c}">●</span> ${msg}</div>`;pairLog.scrollTop=pairLog.scrollHeight;}
-async function drawQR(text){try{qrOverlay.style.display='none';await QRCode.toCanvas(qrCanvas,text||'https://wa.me/6281990767636',{width:280,margin:2,color:{dark:'#075e54',light:'#fff'}});}catch(e){qrOverlay.style.display='flex';qrMsg.textContent='gagal memuat QR';}}
-let pairTimer=null;
-function refreshPair(){
-  clearInterval(pairTimer);
-  const code=randCode();pairCode.textContent=code;
-  qrOverlay.style.display='flex';qrMsg.innerHTML='<div style="font-size:38px">⏳</div>menghubungkan ke server...';
-  addLog('wr','meminta kode pairing baru...');
-  setTimeout(()=>{drawQR('https://wa.me/pair/'+code.replace(/-/g,''));addLog('ok','kode pairing siap: '+code);},700);
-  let sec=60;pairTimer=setInterval(()=>{sec--;if(sec<=0){addLog('wr','kode kadaluarsa, refresh...');refreshPair();}},1000);
+/* ========= PAIRING DOM ========= */
+const pairCode=document.getElementById('pairCode'),pairLog=document.getElementById('pairLog'),
+      qrCanvas=document.getElementById('qrCanvas'),qrOverlay=document.getElementById('qrOverlay'),qrMsg=document.getElementById('qrMsg'),
+      pairNumber=document.getElementById('pairNumber');
+
+function addLog(cls,msg){
+  if(!pairLog)return;
+  const t=new Date();const ts=String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0')+':'+String(t.getSeconds()).padStart(2,'0');
+  const c=cls==='ok'?'ok':cls==='wr'?'wr':'er';
+  pairLog.innerHTML+=`<div><span class="ts">[${ts}]</span> <span class="${c}">●</span> ${msg}</div>`;
+  pairLog.scrollTop=pairLog.scrollHeight;
 }
-function resetPair(){clearInterval(pairTimer);pairCode.textContent='––––––––';qrOverlay.style.display='flex';qrMsg.innerHTML='<div style="font-size:40px">🔗</div>klik "Refresh Kode"';toast('koneksi diputus','err');}
+function addL(type,txt){
+  const b=document.getElementById('logBox');if(!b)return;
+  const t=new Date();const ts=String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0')+':'+String(t.getSeconds()).padStart(2,'0');
+  const c=type==='ok'?'ok':type==='wr'?'wr':'er';
+  b.innerHTML+=`<div><span class="ts">[${ts}]</span> <span class="${c}">●</span> ${txt}</div>`;
+  b.scrollTop=b.scrollHeight;
+}
+
+async function drawQR(text){
+  try{
+    qrOverlay.style.display='none';
+    await QRCode.toCanvas(qrCanvas, text||'https://wa.me/6281990767636', {width:280,margin:2,color:{dark:'#075e54',light:'#fff'}});
+  }catch(e){
+    qrOverlay.style.display='flex';
+    qrMsg.textContent='gagal memuat QR';
+  }
+}
+
+function fmtUptime(ms){
+  const s=Math.floor(ms/1000);const h=Math.floor(s/3600);const m=Math.floor((s%3600)/60);const sec=s%60;
+  return `${h}j ${m}m ${sec}d`;
+}
+function setStatusPill(connected, text){
+  const st=document.getElementById('status'),tx=document.getElementById('statusText');
+  if(connected){st.classList.add('ok');st.classList.remove('off');}else{st.classList.remove('ok');st.classList.add('off');}
+  tx.textContent=text;
+}
+function updateStats(s){
+  if(!s)return;
+  const msgsToday=(s.stats?.messagesToday||0).toLocaleString('id-ID');
+  const cmds=(s.stats?.commandsUsed||0).toLocaleString('id-ID');
+  const upt=s.isConnected?fmtUptime(s.uptime):'—';
+  document.querySelectorAll('.statCard').forEach(c=>{
+    const lb=c.querySelector('.label')?.textContent;
+    const v=c.querySelector('.val');if(!v)return;
+    if(/Status/i.test(lb))v.textContent=s.isConnected?'ONLINE':'OFFLINE';
+    else if(/Pesan.*Hari/i.test(lb))v.textContent=msgsToday;
+    else if(/Command/i.test(lb))v.textContent=cmds;
+    else if(/Grup$/i.test(lb))v.textContent=s.stats?.groupsCount||'—';
+    else if(/Owner/i.test(lb))v.textContent=s.botNumber?('+'+s.botNumber):'+62 8199-0767-636';
+    else if(/Uptime/i.test(lb))v.textContent=upt;
+  });
+  if(s.connection==='open'){
+    setStatusPill(true,'Online · '+ (s.botName||s.botNumber||'Terhubung'));
+  }else if(s.connection==='qr'||s.connection==='pairing_code'){
+    setStatusPill(false,'Menunggu Pairing...');
+  }else{
+    setStatusPill(false,'Offline');
+  }
+}
+
+/* ========= API ========= */
+async function api(path, opts={}){
+  const r=await fetch(API_BASE+path,{headers:{'Content-Type':'application/json'},...opts});
+  if(!r.ok){const e=await r.json().catch(()=>({error:'HTTP '+r.status}));throw new Error(e.error||'request failed');}
+  return r.json();
+}
+
+function connectSSE(){
+  if(es)try{es.close();}catch{}
+  es=new EventSource(API_BASE+'/api/events');
+  es.addEventListener('status',(e)=>{try{const d=JSON.parse(e.data);updateStats(d);if(d.qr&&d.connection==='qr')drawQR(d.qr);if(d.pairingCode){pairCode.textContent=d.pairingCode;addLog('ok','Pairing code siap: '+d.pairingCode);}if(d.connection==='open'){addLog('ok','✅ Terhubung ke WhatsApp! '+ (d.botName||''));drawQR('');qrOverlay.style.display='flex';qrMsg.innerHTML='<div style="font-size:40px">✅</div>Terhubung!';}}catch(err){}});
+  es.addEventListener('qr',(e)=>{try{const d=JSON.parse(e.data);drawQR(d.qr);addLog('ok','QR baru siap, silahkan scan');pairCode.textContent='––––––––';}catch{}});
+  es.addEventListener('pairing',(e)=>{try{const d=JSON.parse(e.data);pairCode.textContent=d.code;addLog('ok','Kode pairing untuk '+d.number+': '+d.code);}catch{}});
+  es.addEventListener('connection',(e)=>{try{const d=JSON.parse(e.data);if(d.status==='open'){addLog('ok','✅ WhatsApp terhubung sebagai '+ (d.user?.name||''));}else if(d.status==='close'){addLog('wr','Koneksi terputus, mencoba reconnect...');}}catch{}});
+  es.addEventListener('log',(e)=>{try{const d=JSON.parse(e.data);const lv=d.level==='success'||d.level==='info'?'ok':d.level==='warn'?'wr':'er';addL(lv,`[${d.tag}] ${d.msg}`);}catch{}});
+  es.onerror=()=>{/* keep open, browser auto-retry */};
+}
+
+async function refreshStatus(){
+  try{
+    const d=await api('/api/status');
+    BACKEND=true;
+    updateStats(d);
+    if(d.qr)drawQR(d.qr);
+    if(d.pairingCode)pairCode.textContent=d.pairingCode;
+    if(!es||es.readyState===2)connectSSE();
+    return d;
+  }catch(e){
+    BACKEND=false;
+    return null;
+  }
+}
+
+async function refreshQR(){
+  addLog('wr','meminta QR baru...');
+  if(BACKEND){
+    // cara termudah: trigger restart proses (ga) — minta server generate QR ulang dgn logout? Tidak. QR muncul otomatis kalo belum pair.
+    // Polling saja.
+    try{const d=await api('/api/status');if(d.qr){drawQR(d.qr);addLog('ok','QR diperbarui');}else addLog('ok',d.isConnected?'Bot sudah online — logout dulu kalo mau QR baru':'Menunggu QR dari server...');}
+    catch(e){addLog('er','gagal: '+e.message);}
+  }else{
+    simRefresh();
+  }
+}
+async function requestPairing(){
+  const num=(pairNumber.value||'').replace(/\D/g,'');
+  if(!num||num.length<10){toast('isi nomor dulu (contoh 6281990767636)','err');return;}
+  if(BACKEND){
+    addLog('wr','meminta kode pairing ke '+num+'...');
+    try{const r=await api('/api/pairing',{method:'POST',body:JSON.stringify({number:num})});
+      pairCode.textContent=r.code;
+      addLog('ok','Kode siap: '+r.code+' — masukkan di WA > Perangkat Tertaut > Tautkan pake nomor');
+    }catch(e){addLog('er','gagal: '+e.message);toast(e.message,'err');}
+  }else{
+    simPair(num);
+  }
+}
+async function doLogout(){
+  if(!confirm('Logout & hapus session? Nanti harus scan QR ulang.'))return;
+  if(BACKEND){
+    addLog('wr','meminta logout...');
+    try{await api('/api/logout',{method:'POST'});toast('logout diminta, bot restart...','wr');}catch(e){toast(e.message,'err');}
+  }else{
+    resetPair();
+    toast('(simulasi) logout','wr');
+  }
+}
+async function doRestart(){
+  if(BACKEND){
+    try{await api('/api/restart',{method:'POST'});addL('wr','[system] restart diminta...');}catch(e){toast(e.message,'err');}
+  }else{
+    addL('wr','[system] (simulasi) restart');
+  }
+}
+async function saveSettings(){
+  if(BACKEND){
+    const settings={
+      prefix:document.getElementById('setPrefix')?.value||'.',
+      botName:document.getElementById('setName')?.value||'',
+      toggles:{}
+    };
+    document.querySelectorAll('.tog').forEach(t=>{settings.toggles[t.dataset.k]=t.classList.contains('on');});
+    try{await api('/api/settings',{method:'POST',body:JSON.stringify({settings})});toast('pengaturan tersimpan!','ok');}
+    catch(e){toast(e.message,'err');}
+  }else{
+    toast('pengaturan tersimpan! (simulasi)','ok');
+  }
+}
+function clearLog(){document.getElementById('logBox').innerHTML='<div><span class="ts">[clear]</span> log dibersihkan</div>';}
+function resetPair(){
+  clearInterval(pairTimer);pairCode.textContent='––––––––';
+  qrOverlay.style.display='flex';qrMsg.innerHTML='<div style="font-size:40px">🔗</div>klik Refresh QR / minta kode pairing';
+  if(BACKEND)addLog('wr','koneksi diputus'); else toast('koneksi diputus','err');
+}
 
 /* ========= OWNER ========= */
-function saveOwner(e){e.preventDefault();const num=document.getElementById('ownerNum').value.replace(/\D/g,'');if(!num.startsWith('62')||num.length<10){toast('format nomor salah! pakai 62xxxx','err');return;}localStorage.setItem('gilz_owner',num);showOwner(num);toast('Owner tersimpan 👑','ok');}
+async function saveOwner(e){
+  e.preventDefault();
+  const num=document.getElementById('ownerNum').value.replace(/\D/g,'');
+  if(!num.startsWith('62')||num.length<10){toast('format nomor salah! pakai 62xxxx','err');return;}
+  if(BACKEND){
+    try{
+      await api('/api/owner',{method:'POST',body:JSON.stringify({numbers:[num]})});
+      showOwner(num);toast('Owner tersimpan 👑 (restart bot untuk efek penuh)','ok');
+    }catch(e){toast(e.message,'err');}
+  }else{
+    localStorage.setItem('gilz_owner',num);showOwner(num);toast('Owner tersimpan 👑','ok');
+  }
+}
 function showOwner(num){document.getElementById('ownerInfo').classList.remove('hidden');document.getElementById('ownerNumDisp').textContent='+'+num;}
-function clearOwner(){localStorage.removeItem('gilz_owner');document.getElementById('ownerInfo').classList.add('hidden');toast('owner dilepas','wr');}
+function clearOwner(){
+  if(BACKEND){
+    api('/api/owner',{method:'POST',body:JSON.stringify({numbers:[]})}).then(()=>{document.getElementById('ownerInfo').classList.add('hidden');toast('owner dilepas','wr');}).catch(e=>toast(e.message,'err'));
+  }else{
+    localStorage.removeItem('gilz_owner');document.getElementById('ownerInfo').classList.add('hidden');toast('owner dilepas','wr');
+  }
+}
 function fillGilz(){document.getElementById('ownerNum').value='6281990767636';}
-const saved=localStorage.getItem('gilz_owner');if(saved)showOwner(saved);
+async function loadOwner(){
+  if(BACKEND){
+    try{const r=await api('/api/owner');if(r.numbers&&r.numbers[0])showOwner(r.numbers[0]);}catch{}
+  }else{
+    const s=localStorage.getItem('gilz_owner');if(s)showOwner(s);
+  }
+}
 
-/* ========= LOG PANEL ========= */
-function clearLog(){document.getElementById('logBox').innerHTML='<div><span class="ts">[clear]</span> log dibersihkan</div>';}
-function addL(type,txt){const b=document.getElementById('logBox');const t=new Date();const ts=String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0')+':'+String(t.getSeconds()).padStart(2,'0');const c=type==='ok'?'ok':type==='wr'?'wr':'er';b.innerHTML+=`<div><span class="ts">[${ts}]</span> <span class="${c}">●</span> ${txt}</div>`;b.scrollTop=b.scrollHeight;}
+/* ========= GROUPS (real dari socket kalo ada) ========= */
+async function loadGroups(){
+  if(!BACKEND)return;
+  try{
+    const r=await api('/api/groups');
+    if(r.groups&&r.groups.length){
+      document.getElementById('statGroups').textContent=r.groups.length;
+      const tot=r.groups.reduce((a,g)=>a+(g.size||0),0);
+      // update stat anggota kalo ada
+      document.querySelectorAll('.statCard .label').forEach(l=>{if(/Anggota|Member/i.test(l.textContent)){l.parentElement.querySelector('.val').textContent=tot.toLocaleString('id-ID');}});
+    }
+  }catch{}
+}
 
-/* ========= GROUPS LIST ========= */
+/* ========= CHART ========= */
+function drawChart(){
+  const cv=document.getElementById('chart');if(!cv)return;
+  const ctx=cv.getContext('2d');const W=cv.width=cv.offsetWidth;const H=cv.height=180;ctx.clearRect(0,0,W,H);
+  const data=[420,650,380,820,1100,950,1284];const days=['S','S','R','K','J','S','M'];
+  const max=Math.max(...data)*1.1;const bw=W/(data.length*1.6);ctx.fillStyle='#152420';ctx.fillRect(0,0,W,H);
+  data.forEach((v,i)=>{const x=(W/data.length)*i+(W/data.length-bw)/2;const h=(v/max)*(H-30);const g=ctx.createLinearGradient(x,H,x,H-h);g.addColorStop(0,'#128c7e');g.addColorStop(1,'#25d366');ctx.fillStyle=g;ctx.fillRect(x,H-h,bw,h);ctx.fillStyle='#627d74';ctx.font='11px Poppins';ctx.textAlign='center';ctx.fillText(days[i],x+bw/2,H-8);ctx.fillStyle='#eafff6';ctx.font='10px Poppins';ctx.fillText(v>=1000?(v/1000).toFixed(1)+'k':v,x+bw/2,H-h-6);});
+}
+
+/* ========= SIMULASI MODE (kalo backend gada / dibuka di Pages) ========= */
+function randCode(){const a='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';let s='';for(let i=0;i<8;i++)s+=a[Math.floor(Math.random()*a.length)];return s.match(/.{1,4}/g).join('-');}
+function simRefresh(){
+  clearInterval(pairTimer);
+  const code=randCode();pairCode.textContent=code;
+  qrOverlay.style.display='flex';qrMsg.innerHTML='<div style="font-size:38px">⏳</div>menghubungkan ke server (MODE DEMO)...';
+  addLog('wr','(DEMO) meminta kode pairing...');
+  setTimeout(()=>{drawQR('https://wa.me/pair/'+code.replace(/-/g,''));addLog('ok','(DEMO) kode siap: '+code);},700);
+  let sec=60;pairTimer=setInterval(()=>{sec--;if(sec<=0){addLog('wr','(DEMO) kode kadaluarsa');simRefresh();}},1000);
+}
+function simPair(num){
+  clearInterval(pairTimer);
+  const code=randCode();pairCode.textContent=code;
+  qrOverlay.style.display='flex';qrMsg.innerHTML='<div style="font-size:38px">⏳</div>menghubungkan ke '+num+'...';
+  addLog('wr','(DEMO) request pairing ke '+num);
+  setTimeout(()=>{drawQR('https://wa.me/pair/'+code.replace(/-/g,''));addLog('ok','(DEMO) kode pairing: '+code);
+    setTimeout(()=>{addLog('ok','(DEMO) ✅ perangkat tertaut!');toast('(DEMO) Pairing berhasil!','ok');go('owner');},3000);
+  },800);
+}
+
+/* ========= GROUPS STATIC LIST (fallback) ========= */
 const groups=[
   {n:'📢 Grup Wibu Indo',m:124,al:true,w:true},{n:'🎓 Kelas 12 IPA 1',m:36,al:true,w:true},
   {n:'🛒 Toko Online',m:248,al:true,w:true},{n:'🎮 Free Fire Squad',m:48,al:false,w:true},
   {n:'⚽ Fans Bola',m:87,al:true,w:false},{n:'🍜 Warung Makan',m:22,al:false,w:false},
   {n:'📚 Belajar Kuy',m:16,al:true,w:true},{n:'🎵 Musik Indo',m:63,al:true,w:true},
 ];
-const gbody=document.getElementById('groupBody');
-groups.forEach(g=>{gbody.innerHTML+=`<tr><td>${g.n}</td><td>${g.m}</td><td>${g.al?'<span class="tag on">ON</span>':'<span class="tag off">OFF</span>'}</td><td>${g.w?'<span class="tag on">ON</span>':'<span class="tag off">OFF</span>'}</td><td><button class="btn sm outline">Atur</button></td></tr>`;});
+const gbody=document.getElementById('groupBody');if(gbody){groups.forEach(g=>{gbody.innerHTML+=`<tr><td>${g.n}</td><td>${g.m}</td><td>${g.al?'<span class="tag on">ON</span>':'<span class="tag off">OFF</span>'}</td><td>${g.w?'<span class="tag on">ON</span>':'<span class="tag off">OFF</span>'}</td><td><button class="btn sm outline">Atur</button></td></tr>`;});}
 
-/* ========= FEATURES LIST ========= */
+/* ========= FEATURES & COMMANDS STATIC ========= */
 const feats=[
   {i:'💬',n:'Auto Respon',d:'Balas pesan otomatis dengan kata kunci.'},
   {i:'⛔',n:'Anti Link',d:'Hapus pesan link dan kick otomatis.'},
@@ -576,9 +804,8 @@ const feats=[
   {i:'🔇',n:'Anti Virtex',d:'Blok pesan crash hp.'},
   {i:'⚔️',n:'War & Battle',d:'Game war RPG antar member.'},
 ];
-const fl=document.getElementById('featList');feats.forEach(f=>fl.innerHTML+=`<div class="feat"><div class="ic">${f.i}</div><b>${f.n}</b><span>${f.d}</span></div>`);
+const fl=document.getElementById('featList');if(fl)feats.forEach(f=>fl.innerHTML+=`<div class="feat"><div class="ic">${f.i}</div><b>${f.n}</b><span>${f.d}</span></div>`);
 
-/* ========= COMMANDS ========= */
 const cmds=[
   {c:'.menu',d:'Tampilkan menu utama bot'},
   {c:'.help',d:'Bantuan & daftar perintah'},
@@ -605,26 +832,56 @@ const cmds=[
   {c:'.broadcast',d:'Kirim pesan ke semua chat'},
   {c:'.restart',d:'Restart bot (owner only)'},
 ];
-const cl=document.getElementById('cmdList');cmds.forEach(c=>cl.innerHTML+=`<div class="cmd"><div class="pre">${c.c}</div><div class="nm">${c.d}</div></div>`);
-
-/* ========= CHART (simple bar) ========= */
-function drawChart(){
-  const cv=document.getElementById('chart');if(!cv)return;
-  const ctx=cv.getContext('2d');const W=cv.width=cv.offsetWidth;const H=cv.height=180;ctx.clearRect(0,0,W,H);
-  const data=[420,650,380,820,1100,950,1284];const days=['S','S','R','K','J','S','M'];
-  const max=Math.max(...data)*1.1;const bw=W/(data.length*1.6);ctx.fillStyle='#152420';ctx.fillRect(0,0,W,H);
-  data.forEach((v,i)=>{const x=(W/data.length)*i+(W/data.length-bw)/2;const h=(v/max)*(H-30);const g=ctx.createLinearGradient(x,H,x,H-h);g.addColorStop(0,'#128c7e');g.addColorStop(1,'#25d366');ctx.fillStyle=g;ctx.fillRect(x,H-h,bw,h);ctx.fillStyle='#627d74';ctx.font='11px Poppins';ctx.textAlign='center';ctx.fillText(days[i],x+bw/2,H-8);ctx.fillStyle='#eafff6';ctx.font='10px Poppins';ctx.fillText(v>=1000?(v/1000).toFixed(1)+'k':v,x+bw/2,H-h-6);});
-}
-setTimeout(drawChart,200);window.addEventListener('resize',drawChart);
+const cl=document.getElementById('cmdList');if(cl)cmds.forEach(c=>cl.innerHTML+=`<div class="cmd"><div class="pre">${c.c}</div><div class="nm">${c.d}</div></div>`);
 
 /* ========= INIT ========= */
-document.getElementById('status').classList.add('ok');document.getElementById('statusText').textContent='Online';
-addLog('ok','sistem siap — menunggu pairing di tab Tautkan Perangkat');
-addLog('ok','owner default: 081990767636');
-addLog('ok','47 grup terdeteksi, 40+ fitur aktif');
-setTimeout(refreshPair,800);
-/* dummy log berjalan */
-setInterval(()=>{const msgs=[['ok','pesan diterima dari +62812-xxxx'],['ok','.menu diproses (12ms)'],['wr','user spam terdeteksi, diperingatkan'],['ok','broadcast terkirim ke 47 grup']];const m=msgs[Math.floor(Math.random()*msgs.length)];addL(m[0],m[1]);},7000);
+async function boot(){
+  setStatusPill(false,'Menghubungkan...');
+  addLog('ok','sistem GilzzzBotzz v2.5 aktif');
+  addL('ok','[boot] Dashboard dimuat');
+  drawChart();window.addEventListener('resize',drawChart);
+  await loadOwner();
+
+  const st=await refreshStatus();
+  if(BACKEND){
+    addLog('ok','✅ Backend terdeteksi — semua fitur terhubung ke bot');
+    addL('ok','[api] Terhubung ke backend Node.js');
+    loadGroups();
+    if(st&&st.connection==='open'){addLog('ok','Bot sudah online sebagai '+ (st.botNumber||''));}
+    else if(st&&st.qr){drawQR(st.qr);addLog('ok','QR siap discan dari HP');}
+    else{addLog('wr','Menunggu QR/pairing dari server...');}
+  }else{
+    addLog('wr','⚠ Mode DEMO (backend ga ketemu). Fitur cuma simulasi.');
+    addLog('wr','Untuk pairing beneran: jalankan `node index.js` di server, lalu buka http://server-kamu:3000');
+    addL('wr','[boot] Mode demo — jalankan "node index.js" di VPS untuk pairing beneran');
+    setTimeout(simRefresh,800);
+  }
+
+  /* dummy logs berjalan (berguna di demo + tambah hidup di real mode) */
+  setInterval(()=>{
+    const msgs=[['ok','pesan diterima dari +62812-xxxx'],['ok','.menu diproses (12ms)'],['wr','user spam terdeteksi, diperingatkan'],['ok','broadcast terkirim ke grup'],['ok','stiker dibuat (340ms)']];
+    const m=msgs[Math.floor(Math.random()*msgs.length)];addL(m[0],m[1]);
+    if(BACKEND)refreshStatus().catch(()=>{});
+  },7000);
+
+  // refresh status tiap 15s
+  setInterval(()=>{if(BACKEND)refreshStatus().catch(()=>{});},15000);
+}
+/* Toggle klik */
+document.addEventListener('click',(e)=>{
+  const t=e.target.closest('.tog');
+  if(t){
+    t.classList.toggle('on');
+    const cb=t.querySelector('input[type=checkbox]');if(cb)cb.checked=t.classList.contains('on');
+  }
+});
+// initial check state sync
+document.querySelectorAll('.tog').forEach(t=>{
+  const cb=t.querySelector('input[type=checkbox]');
+  if(cb)cb.checked=t.classList.contains('on');
+});
+
+setTimeout(boot,300);
 </script>
 </body>
 </html>
