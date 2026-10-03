@@ -388,7 +388,7 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
 <!-- PAIR WIZARD 4 STEPS -->
 <section class="view hidden" id="view-pair">
   <div class="pageTitle"><span class="emoji">📱</span> Tautkan Perangkat</div>
-  <div class="sub">Ikuti langkah demi langkah sampai bot online.</div>
+  <div class="sub">Masukkan nomor bot di bawah — setelah klik Mulai, kode 8 huruf akan muncul di halaman ini DAN di panel Log Aktivitas / terminal server.</div>
   <div id="demoBanner" class="mode-demo-banner" style="display:none">⚠ <b>MODE PREVIEW</b> — Kamu buka ini dari GitHub Pages (static). Kode pairing & QR di bawah cuma simulasi. Untuk pairing beneran, jalankan bot di VPS trus buka <code style="color:#fde68a">http://IP-VPS:3000</code>.</div>
   <div class="wizard">
     <!-- Stepper -->
@@ -418,25 +418,29 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
     <div class="wiz-panel" id="wstep2" style="display:none">
       <div style="font-size:48px">🔑</div>
       <h2>Masukkan Kode Pairing di HP</h2>
-      <p class="sub2">Kode buat nomor <b id="step2num" style="color:var(--green)"></b> adalah:</p>
+      <p class="sub2">Kode pairing untuk nomor <b id="step2num" style="color:var(--green)"></b> adalah:</p>
 
       <div class="big-code" id="pairCode" style="font-size:56px;letter-spacing:10px">––––––––</div>
 
-      <div id="waitConnect" class="connecting-pill" style="display:inline-flex"><span class="spinner"></span><span id="waitMsg">Meminta kode ke server...</span></div>
+      <div id="waitConnect" class="connecting-pill" style="display:inline-flex"><span class="spinner"></span><span id="waitMsg">Meminta kode ke server WhatsApp...</span></div>
 
-      <div class="row" style="justify-content:center;gap:8px;margin-top:18px">
+      <div style="margin-top:10px;font-size:12px;color:var(--text2)">
+        💡 Kode ini juga muncul di terminal tempat kamu menjalankan <code style="color:var(--green);background:var(--card2);padding:1px 6px;border-radius:4px">npm start</code> dan di menu <b>📜 Log Aktivitas</b>.
+      </div>
+
+      <div class="row" style="justify-content:center;gap:8px;margin-top:14px">
         <button class="btn sm" onclick="refreshQR()">🔄 Minta Kode Baru</button>
         <button class="btn sm purple" onclick="copyCode()">📋 Salin Kode</button>
       </div>
 
       <div class="instructions" style="max-width:520px;margin:18px auto 0">
-        <b>📝 Langkah di HP (WAJIB):</b>
+        <b>📝 Langkah di HP (segera setelah kode muncul):</b>
         <ol>
-          <li>Buka <b>WhatsApp</b> di nomor <b id="step2num2" style="color:var(--green)"></b> (nomor yang mau dijadikan bot)</li>
-          <li>Tap <b>⋮ (titik tiga kanan atas)</b> → pilih <b>Perangkat Tertaut</b></li>
-          <li>Tap tombol <b>"Tautkan Perangkat"</b> (hilangin layar kunci jika diminta)</li>
+          <li>Buka <b>WhatsApp</b> di nomor <b id="step2num2" style="color:var(--green)"></b></li>
+          <li>Tap <b>⋮ (kanan atas)</b> → <b>Perangkat Tertaut</b></li>
+          <li>Tap <b>"Tautkan Perangkat"</b></li>
           <li>Tap tulisan <b style="color:var(--green)">"Tautkan dengan nomor telepon saja?"</b> di bawah</li>
-          <li>Masukkan 8 huruf kode di atas → tunggu sebentar, bot otomatis terhubung</li>
+          <li>Masukkan 8 huruf kode di atas → tunggu, bot otomatis terhubung</li>
         </ol>
       </div>
 
