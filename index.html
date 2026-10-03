@@ -297,6 +297,12 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
     <div class="pill" id="status"><span class="led"></span><span id="statusText">Offline</span></div>
   </div>
 </div>
+<!-- BACKEND WARNING (tampil kalo launcher ga jalan / buka Pages static) -->
+<div id="backendWarn" class="hidden" style="position:fixed;top:62px;left:0;right:0;background:linear-gradient(90deg,#dc2626,#b91c1c);color:#fff;padding:12px 20px;z-index:200;font-size:13px;font-weight:600;text-align:center;box-shadow:0 4px 14px rgba(0,0,0,.4);">
+  ⚠️ Backend launcher BELUM nyambung! Jangan buka dari GitHub Pages — upload project ke VPS, jalankan <code style="background:rgba(0,0,0,.3);padding:2px 6px;border-radius:4px">npm start</code>, lalu buka <code style="background:rgba(0,0,0,.3);padding:2px 6px;border-radius:4px">http://IP-VPS-KAMU:3000</code>
+  <button onclick="document.getElementById('backendWarn').classList.add('hidden')" style="float:right;background:transparent;border:0;color:#fff;font-weight:800;cursor:pointer;font-size:18px">✕</button>
+</div>
+
 <!-- LOGIN WALL -->
 <div class="loginWall" id="loginWall">
   <div class="loginBox">
@@ -906,7 +912,7 @@ const btnRestart=document.getElementById('btnRestart');
 const btnStop=document.getElementById('btnStop');
 const btnStartNum=document.getElementById('btnStartNum');
 let ctrlES=null,lastStatus='unknown';
-function botAPI(p,opts){return fetch(p,{headers:{'Content-Type':'application/json'},...opts}).then(r=>r.json());}
+async function botAPI(p,opts){try{const r=await fetch(p,{headers:{'Content-Type':'application/json'},...opts});if(!r.ok){const t=await r.text();let j;try{j=JSON.parse(t);}catch{j={error:'HTTP '+r.status};}throw new Error(j.error||'Gagal');}return r.json();}catch(e){if(e.name==='TypeError'||e.message==='Failed to fetch'){throw new Error('Backend tidak nyambung! Pastikan launcher (npm start) sudah jalan di VPS & kamu buka http://IP-VPS:3000 (BUKAN halaman GitHub Pages static).');}throw e;}}
 function nowTS(){const t=new Date();return String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0')+':'+String(t.getSeconds()).padStart(2,'0');}
 function cprint(stream,msg){
   if(!ctrlLog)return;
@@ -939,10 +945,10 @@ function setBotUI(st){
   else if(stat==='online'){ctrlCode.textContent='✓ TERHUBUNG';ctrlCode.style.color='var(--green)';ctrlCode.style.opacity='1';ctrlCodeHint.textContent='Bot sudah online.';}
   else if(stat==='stopped'||stat==='error'){ctrlCode.textContent='––––––––';ctrlCode.style.opacity='.4';ctrlCode.style.color='';ctrlCodeHint.textContent='Mulai bot dulu untuk dapat kode.';}
 }
-async function botStart(){const r=await botAPI('/api/start',{method:'POST'});if(!r.ok)alert('Gagal: '+r.error);else cprint('sys','▶ Mulai bot (tanpa nomor)...');}
-async function botStop(){if(!confirm('Yakin hentikan bot?'))return;const r=await botAPI('/api/stop',{method:'POST'});if(!r.ok)alert('Gagal: '+r.error);else cprint('sys','■ Menghentikan bot...');}
-async function botRestart(){const r=await botAPI('/api/restart',{method:'POST'});if(!r.ok)alert('Gagal: '+r.error);else cprint('sys','↻ Restart bot...');}
-async function botStartWithNumber(){const num=(ctrlNumber.value||'').replace(/\D/g,'');if(num.length<10||!num.startsWith('62')){alert('Format nomor salah! Pakai 62xxx, contoh 6281990767636');return;}const r=await botAPI('/api/start-with-number',{method:'POST',body:JSON.stringify({number:num})});if(!r.ok)alert('Gagal: '+r.error);else cprint('sys','▶ Mulai bot dengan nomor +'+num);}
+async function botStart(){const num=(ctrlNumber.value||'').replace(/\D/g,'');if(num.length<10||!num.startsWith('62')){ctrlNumber.focus();toast('Isi nomor bot dulu (62xxx) lalu klik Mulai & Minta Kode','wr');return;}btnStart.disabled=true;btnStart.textContent='⌛ Proses...';try{await botStartWithNumber();}finally{btnStart.disabled=false;btnStart.textContent='▶ Mulai Bot';}}
+async function botStop(){if(!confirm('Yakin hentikan bot?'))return;btnStop.disabled=true;try{const r=await botAPI('/api/stop',{method:'POST'});cprint('sys','■ Menghentikan bot...');toast('Bot dihentikan','ok');}catch(e){toast('Gagal stop: '+e.message,'err');}finally{btnStop.disabled=false;}}
+async function botRestart(){btnRestart.disabled=true;btnRestart.textContent='⌛ Restart...';try{const r=await botAPI('/api/restart',{method:'POST'});cprint('sys','↻ Restart bot...');toast('Restart diminta','ok');}catch(e){toast('Gagal restart: '+e.message,'err');}finally{btnRestart.disabled=false;btnRestart.textContent='↻ Restart';}}
+async function botStartWithNumber(){const num=(ctrlNumber.value||'').replace(/\D/g,'');if(num.length<10||!num.startsWith('62')){toast('Format nomor salah! Pakai 62xxx, contoh 6281990767636','err');ctrlNumber.focus();return;}btnStartNum.disabled=true;btnStartNum.textContent='⌛ Starting...';try{const r=await botAPI('/api/start-with-number',{method:'POST',body:JSON.stringify({number:num})});if(!r.ok)throw new Error(r.error||'Gagal start');cprint('sys','▶ Mulai bot dengan nomor +'+num);toast('Bot dimulai! Tunggu kode...','ok');}catch(e){toast('Gagal: '+e.message,'err');}finally{btnStartNum.disabled=false;btnStartNum.textContent='▶ Mulai & Minta Kode';}}
 function copyCtrlCode(){const t=ctrlCode.textContent;if(t&&t.indexOf('-')>-1)navigator.clipboard&&navigator.clipboard.writeText(t).then(()=>toast('kode disalin!','ok'));}
 function connectBotSSE(){if(ctrlES)try{ctrlES.close();}catch{};ctrlES=new EventSource('/api/events');ctrlES.addEventListener('log',e=>{try{const d=JSON.parse(e.data);cprint(d.stream,d.msg);}catch{}});ctrlES.addEventListener('status',e=>{try{setBotUI(JSON.parse(e.data));}catch{}});ctrlES.onerror=()=>{};}
 async function pollBotStatus(){try{const d=await botAPI('/api/status');setBotUI(d);if(d.logsLen!=null&&ctrlLog.childNodes.length===0){const l=await botAPI('/api/logs');(l.logs||[]).forEach(x=>cprint(x.stream,x.msg));}}catch(e){}}
@@ -1366,6 +1372,18 @@ async function boot(){
   await loadOwner();
   // Hubungkan ke launcher control API (selalu ada krn launcher yang serve web ini)
   connectBotSSE();
+  // Backend health check
+  try{
+    const r=await fetch('/api/status',{cache:'no-store'});
+    if(!r.ok)throw new Error('http');
+    await r.json();
+    // ok — launcher jalan
+    document.getElementById('backendWarn')?.classList.add('hidden');
+    cprint('sys','✅ Backend launcher terhubung.');
+  }catch(e){
+    document.getElementById('backendWarn')?.classList.remove('hidden');
+    cprint('err','⚠ Backend launcher TIDAK terhubung. Tombol Mulai tidak akan bekerja sampai kamu jalankan npm start di VPS dan buka http://IP:3000.');
+  }
   await pollBotStatus();
   cprint('sys','🎨 Dashboard launcher siap. Klik tombol Mulai di panel "Mulai Jadi Bot".');
   // polling status tiap 3 detik
