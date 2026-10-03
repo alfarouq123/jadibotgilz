@@ -734,21 +734,19 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
 <section class="view hidden" id="view-tutorial">
   <div class="pageTitle"><span class="emoji">📘</span> Panduan Install</div>
   <div class="sub">Cara menjalankan GilzzzBotzz di VPS / RDP / Replit / laptopmu sendiri.</div>
-  <div class="panel"><h2>Persyaratan</h2>
-    <div style="margin-bottom:14px;padding:12px 14px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.25);border-radius:12px;font-size:13px">
-      <b style="color:var(--green)">✅ Web dashboard INI nyambung ke bot.</b> Jalankan bot dengan Node di server/VPS, lalu buka <code style="color:var(--green);background:var(--card2);padding:1px 6px;border-radius:4px">http://IP-VPS-kamu:3000</code> — QR / pairing code / setting / log di web bakal REAL TIME.
-    </div>
-    <div class="steps" style="margin-top:14px">
-    <div class="step"><div class="num">1</div><div class="body"><b>Node.js 22+</b><span>Bot butuh Node >= 22. Cek: <code style="color:var(--green);background:var(--card2);padding:2px 6px;border-radius:6px">node -v</code></span></div></div>
-    <div class="step"><div class="num">2</div><div class="body"><b>Upload source bot ke VPS</b><span>Pake git / scp / FileZilla. Pastikan folder <code style="color:var(--green);background:var(--card2);padding:2px 6px;border-radius:6px">public/</code> dan <code style="color:var(--green);background:var(--card2);padding:2px 6px;border-radius:6px">src/dashboard-server.js</code> ada.</span></div></div>
-    <div class="step"><div class="num">3</div><div class="body"><b>Install dependencies</b><span>Di folder bot ketik <code style="color:var(--green);background:var(--card2);padding:2px 8px;border-radius:6px">npm install</code> lalu enter.</span></div></div>
-    <div class="step"><div class="num">4</div><div class="body"><b>Jalankan bot</b><span>Ketik <code style="color:var(--green);background:var(--card2);padding:2px 8px;border-radius:6px">npm start</code>. Dashboard web otomatis nyala di port 3000. Buka di browser, masuk ke menu <b>Tautkan Perangkat</b>.</span></div></div>
-    <div class="step"><div class="num">5</div><div class="body"><b>Pairing</b><span>Masukin nomor WA kamu (format 62xxx) → klik <b>Minta Kode</b> → buka WA di HP → Perangkat Tertaut → Tautkan pake nomor → masukin kode 8 huruf. Selesai.</span></div></div>
-    <div class="step"><div class="num">6</div><div class="body"><b>Daftarin Owner</b><span>Setelah terhubung, buka menu <b>Owner Bot</b> dan masukin nomor owner yang bisa kontrol penuh.</span></div></div>
-    <div class="step"><div class="num">7</div><div class="body"><b>(Opsional) Biar 24/7</b><span>Pake <code style="color:var(--green);background:var(--card2);padding:2px 6px;border-radius:6px">pm2</code>: <code style="color:var(--green);background:var(--card2);padding:2px 6px;border-radius:6px">npm i -g pm2 && pm2 start index.js --name gilzzzbotzz && pm2 save</code></span></div></div>
+  <div class="panel"><h2>Cara Jalankan (Terminal)</h2><p class="desc" style="color:var(--text2);font-size:13px;line-height:1.8">
+    Cara PALING GAMPANG: cukup jalankan bot di terminal, nanti bot langsung nanya nomor dan kasih kode disana. Web dashboard ini cuma buat monitoring/setelan saja.
+  </p>
+  <div class="steps" style="margin-top:14px">
+    <div class="step"><div class="num">1</div><div class="body"><b>Install Node.js 22+</b><span>Cek: <code style="color:var(--green);background:var(--card2);padding:2px 6px;border-radius:6px">node -v</code></span></div></div>
+    <div class="step"><div class="num">2</div><div class="body"><b>Install dependencies</b><span>Ketik <code style="color:var(--green);background:var(--card2);padding:2px 8px;border-radius:6px">npm install</code> di folder bot</span></div></div>
+    <div class="step"><div class="num">3</div><div class="body"><b>Jalankan bot</b><span>Ketik <code style="color:var(--green);background:var(--card2);padding:2px 8px;border-radius:6px">npm start</code></span></div></div>
+    <div class="step"><div class="num">4</div><div class="body"><b>Masukkan nomor di terminal</b><span>Bot nanya nomor → ketik nomor (format 62xxx) → tekan enter</span></div></div>
+    <div class="step"><div class="num">5</div><div class="body"><b>Masukkan kode 8 huruf ke WA</b><span>Kode muncul di terminal hijau besar → buka WA → Perangkat Tertaut → Tautkan pake nomor</span></div></div>
+    <div class="step"><div class="num">6</div><div class="body"><b>Bot online!</b><span>Web dashboard ini otomatis menampilkan status &amp; log real-time di port 3000.</span></div></div>
   </div>
-  <div class="row"><a class="btn" href="https://wa.me/6281990767636" target="_blank">💬 Minta bantuan install</a><a class="btn outline" href="https://github.com/alfarouq123/jadibotgilz" target="_blank">📂 Repo GitHub</a></div>
-  <div style="margin-top:18px;padding:14px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:12px;font-size:13px;color:#fde68a"><b>💡 Tidak pakai Pterodactyl</b> — Pterodactyl itu panel buat game server (Minecraft, CS, dll). Bot WhatsApp jalan cuma dengan Node.js biasa (VPS, RDP, Railway, Render, Replit, bahkan laptopmu dirumah).</div>
+  <div class="row"><a class="btn" href="https://wa.me/6281990767636" target="_blank">💬 Minta bantuan install</a></div>
+  <div style="margin-top:18px;padding:14px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:12px;font-size:13px;color:#fde68a"><b>💡 Tidak pakai Pterodactyl</b> — cuma butuh Node.js biasa (VPS, RDP, laptop, Railway, Replit).</div>
   </div>
 </section>
 
