@@ -1032,16 +1032,35 @@ function connectSSE(){
   es.addEventListener('status',(e)=>{
     try{const d=JSON.parse(e.data);
       updateStats(d);
-      if(d.qr&&d.connection==='qr'){drawQR(d.qr);if(wizardStep===2){showQROverlay('🔗','QR siap — silahkan scan dari HP');waitMsg.textContent='Menunggu kamu scan kode QR...';addLog('ok','QR baru siap discan');addW3('QR diterima dari server','ok');}}
-      if(d.pairingCode){pairingCodeVal=d.pairingCode;pairCode.textContent=d.pairingCode;addLog('ok','Kode pairing: '+d.pairingCode);addW3('Pairing code: '+d.pairingCode,'ok');if(wizardStep===2)waitMsg.textContent='Masukkan kode '+d.pairingCode+' di HP kamu...';}
+      // kode pairing bisa datang belakangan (setelah queued)
+      if(d.pairingCode){
+        pairingCodeVal=d.pairingCode;
+        if(pairCode){pairCode.textContent=d.pairingCode;pairCode.style.opacity='1';}
+        addLog('ok','Kode pairing siap: '+d.pairingCode);
+        addW3('Kode siap! Masukkan ke WA sekarang.','ok');
+        if(wizardStep===2){waitMsg.textContent='Masukkan kode di atas ke WA kamu!';}
+      }
       if(d.connection==='open'){onConnected(d);}
     }catch{}
   });
   es.addEventListener('qr',(e)=>{
-    try{const d=JSON.parse(e.data);drawQR(d.qr);if(wizardStep===2){showQROverlay('🔗','QR siap — silahkan scan');waitMsg.textContent='Menunggu kamu scan QR...';}addLog('ok','QR baru siap');}catch{}
+    // QR tidak ditampilkan di UI — event ini hanya dipakai backend untuk trigger pairing
+    try{const d=JSON.parse(e.data);
+      if(wizardStep===2&&!pairingCodeVal){waitMsg.textContent='Menyiapkan kode pairing...';addLog('wr','Server WhatsApp siap, menunggu kode...');}
+    }catch{}
   });
   es.addEventListener('pairing',(e)=>{
-    try{const d=JSON.parse(e.data);pairingCodeVal=d.code;pairCode.textContent=d.code;addLog('ok','Kode pairing siap: '+d.code);addW3('Pairing code diterima: '+d.code,'ok');if(wizardStep===2)waitMsg.textContent='Masukkan kode '+d.code+' di WA kamu...';}catch{}
+    try{const d=JSON.parse(e.data);
+      if(d.waiting){
+        if(wizardStep===2)waitMsg.textContent='Menunggu server siap (kode bakal muncul otomatis)...';
+        return;
+      }
+      if(d.code){
+        pairingCodeVal=d.code;pairCode.textContent=d.code;pairCode.style.opacity='1';
+        addLog('ok','Kode pairing siap: '+d.code);addW3('Kode diterima — masukkan ke WA','ok');
+        if(wizardStep===2)waitMsg.textContent='Masukkan kode di atas ke WA kamu!';
+      }
+    }catch{}
   });
   es.addEventListener('connection',(e)=>{
     try{const d=JSON.parse(e.data);
@@ -1136,9 +1155,17 @@ function refreshQR(){
 async function requestPairingReal(num){
   try{
     const r=await api('/api/pairing',{method:'POST',body:JSON.stringify({number:num})});
-    pairingCodeVal=r.code;pairCode.textContent=r.code;pairCode.style.opacity='1';
-    waitConnect.style.display='inline-flex';waitMsg.textContent='Menunggu kamu masukkan kode di HP...';
-    addLog('ok','Kode pairing siap: '+r.code);addW3('Kode siap! Masukkan 8 huruf di atas ke WA → Perangkat Tertaut → Tautkan pake nomor','ok');
+    if(r.queued||!r.code){
+      pairCode.textContent='––––––––';pairCode.style.opacity='0.4';
+      waitConnect.style.display='inline-flex';waitMsg.textContent='Menunggu server siap (lagi nyambung ke WhatsApp)...';
+      addLog('wr','Permintaan dikirim, menunggu socket siap...');
+      addW3('Sedang menghubungi server WhatsApp. Kode akan muncul otomatis dalam 5-10 detik.','info');
+    }else{
+      pairingCodeVal=r.code;pairCode.textContent=r.code;pairCode.style.opacity='1';
+      waitConnect.style.display='inline-flex';waitMsg.textContent='Masukkan kode di atas ke WA kamu sekarang!';
+      addLog('ok','✅ Kode pairing siap: '+r.code);
+      addW3('Kode siap! Masukkan 8 huruf di atas ke WA → Perangkat Tertaut → Tautkan pake nomor','ok');
+    }
     startPollingConnection();
   }catch(e){
     addLog('er','Gagal minta kode: '+e.message);addW3('Gagal: '+e.message,'er');
