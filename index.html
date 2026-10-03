@@ -325,7 +325,7 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
 <aside class="sidebar" id="sidebar">
   <div class="sideH">Utama</div>
   <div class="sideLink active" data-view="dashboard"><span class="ic">🏠</span> Dashboard</div>
-  <div class="sideLink" data-view="pair"><span class="ic">📱</span> Tautkan Perangkat</div>
+  <div class="sideLink" data-view="pair"><span class="ic">🚀</span> Mulai Jadi Bot</div>
   <div class="sideLink" data-view="owner"><span class="ic">👑</span> Owner Bot</div>
   <div class="sideH">Kelola</div>
   <div class="sideLink" data-view="inbox"><span class="ic">💬</span> Pesan <span class="badge" id="inboxBadge" style="display:none">0</span></div>
@@ -385,101 +385,55 @@ label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bot
   </div>
 </section>
 
-<!-- PAIR WIZARD 4 STEPS -->
+<!-- PANEL KONTROL BOT (Mulai Jadi Bot) -->
 <section class="view hidden" id="view-pair">
-  <div class="pageTitle"><span class="emoji">📱</span> Tautkan Perangkat</div>
-  <div class="sub">Masukkan nomor bot di bawah — setelah klik Mulai, kode 8 huruf akan muncul di halaman ini DAN di panel Log Aktivitas / terminal server.</div>
-  <div id="demoBanner" class="mode-demo-banner" style="display:none">⚠ <b>MODE PREVIEW</b> — Kamu buka ini dari GitHub Pages (static). Kode pairing & QR di bawah cuma simulasi. Untuk pairing beneran, jalankan bot di VPS trus buka <code style="color:#fde68a">http://IP-VPS:3000</code>.</div>
-  <div class="wizard">
-    <!-- Stepper -->
-    <div class="steps-bar" id="stepper">
-      <div class="step-dot active" data-n="1">1</div><div class="step-line"></div>
-      <div class="step-dot" data-n="2">2</div><div class="step-line"></div>
-      <div class="step-dot" data-n="3">3</div><div class="step-line"></div>
-      <div class="step-dot" data-n="4">4</div>
-    </div>
-    <div class="step-title" id="stepLabel"><b>Langkah 1</b>Masukkan nomor WhatsApp yang mau dijadikan bot</div>
+  <div class="pageTitle"><span class="emoji">🚀</span> Mulai Jadi Bot</div>
+  <div class="sub">Kontrol penuh bot dari halaman ini — jalankan, masukkan nomor, lihat kode pairing, dan pantau log. Tidak perlu buka terminal/VPS panel.</div>
 
-    <!-- STEP 1: NOMOR -->
-    <div class="wiz-panel" id="wstep1">
-      <div style="font-size:52px">📱</div>
-      <h2>Nomor WhatsApp Bot</h2>
-      <p class="sub2">Masukkan nomor HP yang akan dijadikan bot. <b>Pastikan nomor ini aktif dan bisa menerima WhatsApp.</b></p>
-      <div style="max-width:380px;margin:0 auto;text-align:left">
-        <label>Nomor WhatsApp (format 62xxx)</label>
-        <input id="pairNumber" type="tel" placeholder="contoh: 6281990767636" inputmode="numeric" style="text-align:center;font-size:18px;letter-spacing:1px;font-weight:600">
-        <div style="font-size:12px;color:var(--text2);margin-top:6px">Gunakan kode negara <b>62</b>, jangan pakai 0 di depan. Contoh benar: <code style="color:var(--green)">6281990767636</code></div>
+  <!-- Status bar -->
+  <div class="panel" style="padding:20px">
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px">
+        <div style="font-size:12px;color:var(--text2);letter-spacing:.5px;text-transform:uppercase;font-weight:700">Status Bot</div>
+        <div id="ctrlStatus" style="font-size:22px;font-weight:800;margin-top:4px;display:flex;align-items:center;gap:10px">
+          <span id="ctrlDot" style="width:12px;height:12px;border-radius:50%;background:var(--danger);display:inline-block"></span>
+          <span id="ctrlStatusText">Berhenti</span>
+        </div>
+        <div id="ctrlSub" style="font-size:12px;color:var(--text2);margin-top:4px">Klik tombol Mulai untuk menyalakan bot.</div>
       </div>
-      <div style="margin-top:22px"><button class="btn green" style="padding:14px 34px;font-size:15px" onclick="wizardStartPair()">🚀 Mulai Tautkan Perangkat</button></div>
-      <div id="werr1" class="error-box" style="display:none"></div>
-    </div>
-
-    <!-- STEP 2: KODE PAIRING (NO QR) -->
-    <div class="wiz-panel" id="wstep2" style="display:none">
-      <div style="font-size:48px">🔑</div>
-      <h2>Masukkan Kode Pairing di HP</h2>
-      <p class="sub2">Kode pairing untuk nomor <b id="step2num" style="color:var(--green)"></b> adalah:</p>
-
-      <div class="big-code" id="pairCode" style="font-size:56px;letter-spacing:10px">––––––––</div>
-
-      <div id="waitConnect" class="connecting-pill" style="display:inline-flex"><span class="spinner"></span><span id="waitMsg">Meminta kode ke server WhatsApp...</span></div>
-
-      <div style="margin-top:10px;font-size:12px;color:var(--text2)">
-        💡 Kode ini juga muncul di terminal tempat kamu menjalankan <code style="color:var(--green);background:var(--card2);padding:1px 6px;border-radius:4px">npm start</code> dan di menu <b>📜 Log Aktivitas</b>.
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn green" id="btnStart" onclick="botStart()">▶ Mulai Bot</button>
+        <button class="btn gold" id="btnRestart" onclick="botRestart()" disabled style="opacity:.4;cursor:not-allowed">↻ Restart</button>
+        <button class="btn danger" id="btnStop" onclick="botStop()" disabled style="opacity:.4;cursor:not-allowed">■ Berhenti</button>
       </div>
-
-      <div class="row" style="justify-content:center;gap:8px;margin-top:14px">
-        <button class="btn sm" onclick="refreshQR()">🔄 Minta Kode Baru</button>
-        <button class="btn sm purple" onclick="copyCode()">📋 Salin Kode</button>
-      </div>
-
-      <div class="instructions" style="max-width:520px;margin:18px auto 0">
-        <b>📝 Langkah di HP (segera setelah kode muncul):</b>
-        <ol>
-          <li>Buka <b>WhatsApp</b> di nomor <b id="step2num2" style="color:var(--green)"></b></li>
-          <li>Tap <b>⋮ (kanan atas)</b> → <b>Perangkat Tertaut</b></li>
-          <li>Tap <b>"Tautkan Perangkat"</b></li>
-          <li>Tap tulisan <b style="color:var(--green)">"Tautkan dengan nomor telepon saja?"</b> di bawah</li>
-          <li>Masukkan 8 huruf kode di atas → tunggu, bot otomatis terhubung</li>
-        </ol>
-      </div>
-
-      <div id="werr2" class="error-box" style="display:none"></div>
-      <div class="row" style="justify-content:center;margin-top:22px">
-        <button class="btn outline" onclick="wizardBack(1)">← Kembali</button>
-        <button class="btn danger" onclick="cancelWizard()">❌ Batal</button>
-      </div>
-    </div>
-
-    <!-- STEP 3: WAITING / CONNECTING -->
-    <div class="wiz-panel" id="wstep3" style="display:none">
-      <div style="font-size:60px"><span class="spinner" style="width:60px;height:60px;border-width:4px;border-color:rgba(37,211,102,.2);border-top-color:var(--green);display:inline-block"></span></div>
-      <h2>Menghubungkan ke WhatsApp...</h2>
-      <p class="sub2" id="w3sub">Lagi sinkronisasi akun kamu, jangan tutup halaman ini.</p>
-      <div class="connecting-pill"><span class="spinner"></span><span>Connecting...</span></div>
-      <div id="w3log" style="text-align:left;background:var(--card2);border-radius:12px;padding:14px;margin-top:18px;max-height:140px;overflow-y:auto;font-family:monospace;font-size:12px;color:var(--text2);line-height:1.8"></div>
-    </div>
-
-    <!-- STEP 4: CONNECTED! set owner -->
-    <div class="wiz-panel" id="wstep4" style="display:none">
-      <div style="font-size:60px">✅</div>
-      <h2 style="color:var(--green)">Berhasil Terhubung!</h2>
-      <p class="sub2">Akun <b id="w4num"></b> sudah menjadi bot. Sekarang daftarkan nama owner.</p>
-      <div style="max-width:380px;margin:18px auto 0;text-align:left">
-        <label>Nama Owner (yang punya kontrol bot)</label>
-        <input id="wOwnerName" type="text" placeholder="contoh: Gilz">
-        <label style="margin-top:14px">Nomor Owner (format 62xxx)</label>
-        <input id="wOwnerNum" type="tel" placeholder="contoh: 6281990767636" inputmode="numeric" value="6281990767636">
-        <div style="font-size:12px;color:var(--text2);margin-top:6px">Nomor inilah yang bisa pakai command owner (restart, broadcast, eval, dll).</div>
-      </div>
-      <div style="margin-top:22px"><button class="btn green" style="padding:14px 34px;font-size:15px" onclick="wizardFinishOwner()">🎉 Selesai! Masuk Dashboard</button></div>
-      <div id="werr4" class="error-box" style="display:none"></div>
     </div>
   </div>
 
-  <div class="panel" style="margin-top:20px">
-    <h2>Log Koneksi</h2>
-    <div class="log" id="pairLog"><div><span class="ts">[siap]</span> siap. klik menu "Mulai Tautkan Perangkat" untuk mulai.</div></div>
+  <!-- Nomor bot + kode pairing -->
+  <div class="panel">
+    <h2>1️⃣ Masukkan Nomor Bot</h2>
+    <p class="desc">Nomor HP yang mau dijadikan akun bot. Setelah klik "Mulai & Minta Kode", bot akan otomatis start dan kode pairing muncul di bawah.</p>
+    <div class="row" style="gap:10px">
+      <input id="ctrlNumber" type="tel" placeholder="contoh: 6281990767636" inputmode="numeric" style="flex:1;max-width:420px;text-align:center;font-size:16px;font-weight:600;letter-spacing:1px">
+      <button class="btn green" id="btnStartNum" onclick="botStartWithNumber()">▶ Mulai &amp; Minta Kode</button>
+    </div>
+    <div style="font-size:12px;color:var(--text2);margin-top:8px">Gunakan kode negara <b>62</b> (tanpa +/0). Contoh: <code style="color:var(--green)">6281990767636</code></div>
+  </div>
+
+  <div class="panel">
+    <h2>2️⃣ Kode Pairing</h2>
+    <p class="desc">Setelah bot siap, 8 huruf kode muncul di bawah. Masukkan di HP: WhatsApp → Perangkat Tertaut → Tautkan pake nomor telepon.</p>
+    <div class="big-code" id="ctrlCode" style="opacity:.4">––––––––</div>
+    <div id="ctrlCodeHint" style="text-align:center;font-size:13px;color:var(--text2);margin-top:-8px">Mulai bot dulu untuk mendapatkan kode.</div>
+    <div class="row" style="justify-content:center">
+      <button class="btn sm purple" onclick="copyCtrlCode()">📋 Salin Kode</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>3️⃣ Log / Terminal</h2>
+    <p class="desc">Semua output bot muncul di sini real-time (sama seperti terminal).</p>
+    <div id="ctrlLog" style="background:#050b08;border:1px solid var(--border);border-radius:12px;padding:14px;font-family:'Courier New',monospace;font-size:12px;line-height:1.7;color:#a7f3d0;max-height:360px;overflow-y:auto;text-align:left"></div>
   </div>
 </section>
 
@@ -939,34 +893,70 @@ window.addEventListener('resize',()=>{
 /* ========= TOAST ========= */
 function toast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(type==='err'?'err':type==='wr'?'wr':'');setTimeout(()=>t.className='toast',2800);}
 
-/* ========= STATE (lanjutan) ========= */
-let wizardStep=1;
-let pairNumberVal='';
-let pairingCodeVal='';
-let pairingStarted=false;
-
-/* ========= DOM refs ========= */
-const pairCode=document.getElementById('pairCode'),pairLog=document.getElementById('pairLog'),
-      qrCanvas=document.getElementById('qrCanvas'),qrOverlay=document.getElementById('qrOverlay'),qrMsg=document.getElementById('qrMsg'),
-      pairNumber=document.getElementById('pairNumber'),
-      wstep1=document.getElementById('wstep1'),wstep2=document.getElementById('wstep2'),wstep3=document.getElementById('wstep3'),wstep4=document.getElementById('wstep4'),
-      stepLabel=document.getElementById('stepLabel'),stepper=document.getElementById('stepper'),
-      waitConnect=document.getElementById('waitConnect'),waitMsg=document.getElementById('waitMsg'),
-      demoBanner=document.getElementById('demoBanner'),w3log=document.getElementById('w3log');
-
-/* ========= LOGS ========= */
+/* ========= BOT CONTROL (launcher API) ========= */
+const ctrlNumber=document.getElementById('ctrlNumber');
+const ctrlCode=document.getElementById('ctrlCode');
+const ctrlCodeHint=document.getElementById('ctrlCodeHint');
+const ctrlDot=document.getElementById('ctrlDot');
+const ctrlStatusText=document.getElementById('ctrlStatusText');
+const ctrlSub=document.getElementById('ctrlSub');
+const ctrlLog=document.getElementById('ctrlLog');
+const btnStart=document.getElementById('btnStart');
+const btnRestart=document.getElementById('btnRestart');
+const btnStop=document.getElementById('btnStop');
+const btnStartNum=document.getElementById('btnStartNum');
+let ctrlES=null,lastStatus='unknown';
+function botAPI(p,opts){return fetch(p,{headers:{'Content-Type':'application/json'},...opts}).then(r=>r.json());}
 function nowTS(){const t=new Date();return String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0')+':'+String(t.getSeconds()).padStart(2,'0');}
-function addLog(cls,msg){
-  if(!pairLog)return;const c=cls==='ok'?'ok':cls==='wr'?'wr':'er';
-  pairLog.innerHTML+=`<div><span class="ts">[${nowTS()}]</span> <span class="${c}">●</span> ${msg}</div>`;
-  pairLog.scrollTop=pairLog.scrollHeight;
+function cprint(stream,msg){
+  if(!ctrlLog)return;
+  const colors={out:'#a7f3d0',err:'#fca5a5',sys:'#fde68a'};
+  const d=document.createElement('div');
+  d.style.color=colors[stream]||'#a7f3d0';
+  d.textContent='['+nowTS()+'] '+msg;
+  ctrlLog.appendChild(d);ctrlLog.scrollTop=ctrlLog.scrollHeight;
 }
-function addW3(msg,cls='info'){
-  if(!w3log)return;
-  const col=cls==='ok'?'#86efac':cls==='wr'?'#fde68a':cls==='er'?'#fca5a5':'#94a3b8';
-  w3log.innerHTML+=`<div style="color:${col}">[${nowTS()}] ${msg}</div>`;
-  w3log.scrollTop=w3log.scrollHeight;
+function setBotUI(st){
+  const stat=st.status||'stopped';
+  if(stat===lastStatus){return;}lastStatus=stat;
+  const M={
+    stopped:['Berhenti','#ef4444','Bot tidak berjalan.',false,false,false],
+    starting:['Menyalakan...','#fbbf24','Menjalankan bot, tunggu...',true,true,true],
+    'waiting-number':['Menunggu nomor','#fbbf24','Masukkan nomor lalu klik Mulai & Minta Kode.',true,true,false],
+    'requesting-code':['Meminta kode','#fbbf24','Sedang meminta kode pairing ke server WA...',true,true,false],
+    'pairing-ready':['Kode siap!','#25d366','Masukkan 8 huruf kode ke HP sekarang!',true,true,true],
+    online:['ONLINE','#25d366','✅ Bot online dan siap pakai!',true,true,true],
+    stopping:['Menghentikan...','#fbbf24','Sedang menghentikan...',false,false,true],
+    error:['Error','#ef4444','Bot berhenti error. Cek log.',false,false,false],
+  };
+  const m=M[stat]||['?','#999','',false,false,false];
+  ctrlDot.style.background=m[1];ctrlStatusText.style.color=m[1];ctrlStatusText.textContent=m[0];ctrlSub.textContent=m[2];
+  btnStart.disabled=m[3];btnStart.style.opacity=m[3]?.4:1;btnStart.style.cursor=m[3]?'not-allowed':'pointer';
+  btnStartNum.disabled=m[3];btnStartNum.style.opacity=m[3]?.4:1;btnStartNum.style.cursor=m[3]?'not-allowed':'pointer';
+  btnRestart.disabled=!m[4];btnRestart.style.opacity=m[4]?1:.4;btnRestart.style.cursor=m[4]?'pointer':'not-allowed';
+  btnStop.disabled=!m[5];btnStop.style.opacity=m[5]?1:.4;btnStop.style.cursor=m[5]?'pointer':'not-allowed';
+  if(stat==='pairing-ready'&&st.pairingCode){ctrlCode.textContent=st.pairingCode;ctrlCode.style.opacity='1';ctrlCode.style.color='';ctrlCodeHint.innerHTML='✅ <b style="color:var(--green)">Kode siap!</b> Masukkan ke WA → Perangkat Tertaut → Tautkan pake nomor.';cprint('sys','🎯 KODE SIAP: '+st.pairingCode);}
+  else if(stat==='online'){ctrlCode.textContent='✓ TERHUBUNG';ctrlCode.style.color='var(--green)';ctrlCode.style.opacity='1';ctrlCodeHint.textContent='Bot sudah online.';}
+  else if(stat==='stopped'||stat==='error'){ctrlCode.textContent='––––––––';ctrlCode.style.opacity='.4';ctrlCode.style.color='';ctrlCodeHint.textContent='Mulai bot dulu untuk dapat kode.';}
 }
+async function botStart(){const r=await botAPI('/api/start',{method:'POST'});if(!r.ok)alert('Gagal: '+r.error);else cprint('sys','▶ Mulai bot (tanpa nomor)...');}
+async function botStop(){if(!confirm('Yakin hentikan bot?'))return;const r=await botAPI('/api/stop',{method:'POST'});if(!r.ok)alert('Gagal: '+r.error);else cprint('sys','■ Menghentikan bot...');}
+async function botRestart(){const r=await botAPI('/api/restart',{method:'POST'});if(!r.ok)alert('Gagal: '+r.error);else cprint('sys','↻ Restart bot...');}
+async function botStartWithNumber(){const num=(ctrlNumber.value||'').replace(/\D/g,'');if(num.length<10||!num.startsWith('62')){alert('Format nomor salah! Pakai 62xxx, contoh 6281990767636');return;}const r=await botAPI('/api/start-with-number',{method:'POST',body:JSON.stringify({number:num})});if(!r.ok)alert('Gagal: '+r.error);else cprint('sys','▶ Mulai bot dengan nomor +'+num);}
+function copyCtrlCode(){const t=ctrlCode.textContent;if(t&&t.indexOf('-')>-1)navigator.clipboard&&navigator.clipboard.writeText(t).then(()=>toast('kode disalin!','ok'));}
+function connectBotSSE(){if(ctrlES)try{ctrlES.close();}catch{};ctrlES=new EventSource('/api/events');ctrlES.addEventListener('log',e=>{try{const d=JSON.parse(e.data);cprint(d.stream,d.msg);}catch{}});ctrlES.addEventListener('status',e=>{try{setBotUI(JSON.parse(e.data));}catch{}});ctrlES.onerror=()=>{};}
+async function pollBotStatus(){try{const d=await botAPI('/api/status');setBotUI(d);if(d.logsLen!=null&&ctrlLog.childNodes.length===0){const l=await botAPI('/api/logs');(l.logs||[]).forEach(x=>cprint(x.stream,x.msg));}}catch(e){}}
+
+// Stubs (elemen wizard lama sudah dihapus — biar tidak error)
+function addLog(){}function addW3(){}function goStep(){}function wizardBack(){}function wizardStartPair(){}function cancelWizard(){}
+function copyCode(){copyCtrlCode();}function refreshQR(){}async function requestPairingReal(){}function startPollingConnection(){}
+function onConnected(){}async function wizardFinishOwner(){}function simStartPair(){}function showQROverlay(){}async function drawQR(){}
+function resetPair(){}function clearOwner(){}function fillGilz(){}async function saveOwnerForm(){}function showOwner(){}
+async function loadOwner(){}async function loadGroups(){}function saveSettings(){}async function doLogout(){}async function doRestart(){}
+function openBuyForm(){}function submitBuy(){}function submitOwnerReq(){}
+const pairCode=null,pairLog=null,w3log=null,pairNumber={value:''},pairNumberVal='',pairingCodeVal='',pairingStarted=false,wizardStep=0,
+      wstep1=null,wstep2=null,wstep3=null,wstep4=null,stepLabel=null,stepper=null,waitConnect=null,waitMsg=null,demoBanner=null,
+      qrCanvas=null,qrOverlay=null,qrMsg=null;
 function addL(type,txt){
   const b=document.getElementById('logBox');if(!b)return;
   const c=type==='ok'?'ok':type==='wr'?'wr':'er';
@@ -1366,34 +1356,25 @@ function drawChart(){const cv=document.getElementById('chart');if(!cv)return;con
 
 /* ========= BOOT ========= */
 async function boot(){
-  // Restore session dari localStorage + backend
+  // Login check
   await restoreSession();
-  // Awal: OFFLINE sampai beneran connected
+  // Stats default offline
   setStatusPill(false,'Belum tertaut');
   document.getElementById('dashStatus').textContent='OFFLINE';
-  addLog('ok','GilzzzBotzz v3 aktif');
-  addL('ok','[boot] Dashboard dimuat');
+  addL('ok','[boot] GilzzzBotzz Dashboard siap');
   drawChart();window.addEventListener('resize',drawChart);
-  goStep(1);
   await loadOwner();
-
-  const st=await refreshStatus();
-  if(BACKEND){
-    addLog('ok','✅ Backend Node.js terdeteksi');
-    addL('ok','[api] Terhubung ke backend');
-    loadGroups();
-    if(st&&st.connection==='open'){addLog('ok','Bot SUDAH online sebagai '+ (st.botNumber||''));setStatusPill(true,'Online · '+(st.botNumber||''));}
-    else{addLog('wr','Bot belum tertaut. Klik menu "Tautkan Perangkat" untuk mulai.');}
-  }else{
-    demoBanner.style.display='block';
-    addLog('wr','⚠ Mode PREVIEW (backend ga ketemu). Klik "Mulai Tautkan Perangkat" buat liat simulasi.');
-    addLog('wr','Untuk pairing BENERAN: jalankan `node index.js` di VPS, buka http://IP-VPS:3000');
-    addL('wr','[boot] Mode preview — jalankan bot di server untuk pairing nyata');
-  }
+  // Hubungkan ke launcher control API (selalu ada krn launcher yang serve web ini)
+  connectBotSSE();
+  await pollBotStatus();
+  cprint('sys','🎨 Dashboard launcher siap. Klik tombol Mulai di panel "Mulai Jadi Bot".');
+  // polling status tiap 3 detik
+  setInterval(pollBotStatus,3000);
 
   // Polling status rutin (tanpa fake logs)
   setInterval(()=>{if(BACKEND)refreshStatus().catch(()=>{});},5000);
 }
+
 
 /* Toggle klik */
 document.addEventListener('click',(e)=>{
@@ -1401,24 +1382,7 @@ document.addEventListener('click',(e)=>{
   if(t){t.classList.toggle('on');const cb=t.querySelector('input[type=checkbox]');if(cb)cb.checked=t.classList.contains('on');}
 });
 document.querySelectorAll('.tog').forEach(t=>{const cb=t.querySelector('input[type=checkbox]');if(cb)cb.checked=t.classList.contains('on');});
-
-// owner form submit handler
 window.saveOwner=saveOwnerForm;
-
-setTimeout(boot,300);
-document.addEventListener('click',(e)=>{
-  const t=e.target.closest('.tog');
-  if(t){
-    t.classList.toggle('on');
-    const cb=t.querySelector('input[type=checkbox]');if(cb)cb.checked=t.classList.contains('on');
-  }
-});
-// initial check state sync
-document.querySelectorAll('.tog').forEach(t=>{
-  const cb=t.querySelector('input[type=checkbox]');
-  if(cb)cb.checked=t.classList.contains('on');
-});
-
 setTimeout(boot,300);
 </script>
 </body>
